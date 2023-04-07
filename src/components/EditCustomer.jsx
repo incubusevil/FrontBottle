@@ -1,17 +1,16 @@
 import * as React from 'react';
+import { useState }  from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from "@mui/material/CssBaseline";
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import IconButton from "@mui/material/IconButton";
 import Typography from '@mui/material/Typography';
 import axios from "axios";
 import Paper from '@mui/material/Paper';
 import { Container } from '@mui/system';
 import Dialog from '@mui/material/Dialog';
-
 
  function CreateCustomer() {
   const rolename = "CUSTOMER"
@@ -44,11 +43,12 @@ import Dialog from '@mui/material/Dialog';
 
 
     const savedToken = localStorage.getItem("token");
-
     console.log(roles)
-
     axios
       .post("http://localhost:8080/rest/api/user/createUser", {
+        headers: {
+          Authorization: `Bearer ${savedToken}`,
+        },
         firstName,
         lastName,
         email,
@@ -61,39 +61,71 @@ import Dialog from '@mui/material/Dialog';
       .then((response) => console.log(response.data));
   };
 
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(
+    "http://localhost:8080/photos/test.png"
+  );
+const handleFileSelect = async (event) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", event.target.files[0]);
+      const savedToken = localStorage.getItem("token");
+      const response = await axios.post(
+        "http://localhost:8080/rest/api/user/photos",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${savedToken}`,
+          },
+        }
+      );
+
+      setProfilePhotoUrl(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
     <Box
-        sx={{
-          marginLeft: 40,
-          marginRight: 40,
-        }}
+        
       >
     <Button type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }} onClick={handleClickOpen}>
-      Add Customer
+      Edit Customer
     </Button>
-    <Dialog open={open} onClose={handleClose} sx={{ height:1000, mt: 4 }}>
+    <Dialog open={open} onClose={handleClose} sx={{ height:750, mt: 15 }}>
     <Paper>
-      <Grid xs={6}>
-      <CssBaseline />
       <Container component="main" maxWidth="xs">
-      <Box
-        sx={{
-          marginTop: 8,
-          marginBottom: 8,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <IconButton variant="contained" component="label">
+                    <Avatar
+                      src={profilePhotoUrl}
+                      style={{
+                        margin: "10px",
+                        width: "60px",
+                        height: "60px",
+                      }}
+                    />
+                    <input
+                      hidden
+                      accept="image/*"
+                      multiple
+                      type="file"
+                      onChange={handleFileSelect}
+                    />
+                  </IconButton>
           <Typography component="h1" variant="h5">
-            Add Customer
+            Edit Customer
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -174,23 +206,21 @@ import Dialog from '@mui/material/Dialog';
               type="submit"
               fullWidth
               variant="contained"
-              onClick={handleClose}
               sx={{ mt: 3, mb: 2 }}
             >
-              Create Customer
+              Apply Changes
             </Button>
             
           </Box>
         </Box>
         </Container>
-            </Grid> 
-            </Paper>
-            </Dialog>
-            </Box>
-            </>
+        </Paper>
+        </Dialog>
+    </Box>
+    </>
   );
 }
 
-export default function AddCustomer() {
+export default function EditCustomer() {
   return <CreateCustomer />;
 }
