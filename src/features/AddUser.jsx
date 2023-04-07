@@ -19,6 +19,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 
+console.log('test')
+
 export default function AddUser() {
   return <CreateUser />;
 }
