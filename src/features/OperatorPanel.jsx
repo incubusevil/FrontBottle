@@ -6,7 +6,7 @@ import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Link as RouteLink, Route, Routes } from "react-router-dom";
 import CreateOrder from "../components/CreateOrder";
@@ -14,7 +14,7 @@ import CustomersOrder from "../components/CustomersOrder";
 import CurrentOrder from "../components/CurrentOrder";
 import CustomersOperatorPanel from "../components/CustomersOperatorPanel";
 import HomeIcon from "@mui/icons-material/Home";
-
+import Badge from '@mui/material/Badge';
 
 const drawerWidth = 240;
 
@@ -38,6 +38,7 @@ const AppBar = styled(MuiAppBar, {
 
 export const OperatorPanel = ({ handleLogout }) => {
   const [items, setItems] = React.useState([]);
+  const [itemsInCart, setItemsInCart] = React.useState(0);
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -56,13 +57,15 @@ export const OperatorPanel = ({ handleLogout }) => {
           >
             Operator Dashboard
           </Typography>
-          <IconButton
-            color="inherit"
-            component={RouteLink}
-            to="/CurrentOrder"
-          >
-            <ShoppingCartIcon />
-          </IconButton>
+              <IconButton
+                color="inherit"
+                component={RouteLink}
+                to="/CurrentOrder"
+              >
+                <Badge badgeContent={itemsInCart} color="secondary">
+                <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
           <IconButton
             color="inherit"
             component={RouteLink}
@@ -89,18 +92,18 @@ export const OperatorPanel = ({ handleLogout }) => {
         }}
       >
         <Toolbar />
-          <Routes>
-            <Route
-              path="/CustomersOperatorPanel"
-              element={<CustomersOperatorPanel />}
-            />
-            <Route
-              path="/CreateOrder"
-              element={<CreateOrder setItems={setItems} />}
-            />
-            <Route path="/CustomersOrder" element={<CustomersOrder />} />
-            <Route path="/CurrentOrder" element={<CurrentOrder />} />
-          </Routes>
+        <Routes>
+          <Route
+            path="/CustomersOperatorPanel"
+            element={<CustomersOperatorPanel />}
+          />
+          <Route
+            path="/CreateOrder"
+            element={<CreateOrder setItems={setItems} />}
+          />
+          <Route path="/CustomersOrder" element={<CustomersOrder />} />
+          <Route path="/CurrentOrder" element={<CurrentOrder />} />
+        </Routes>
       </Box>
     </Box>
   );
