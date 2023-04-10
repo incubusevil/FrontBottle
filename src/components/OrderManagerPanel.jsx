@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
-import axios from "axios";
+import axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -21,7 +21,7 @@ const columns = [
   {
     id: 'createdDate',
     label: 'Created Date',
-    minWidth: 100, 
+    minWidth: 100,
   },
   {
     id: 'status',
@@ -32,15 +32,15 @@ const columns = [
   {
     id: 'editCustomer',
     label: 'Edit Customer',
-    minWidth: 100, 
+    minWidth: 100,
   },
 ];
 
 export default function OrderManagerPanel() {
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [data, setData] = React.useState([])
-  const [count, setCount] = React.useState([])
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [data, setData] = React.useState([]);
+  const [count, setCount] = React.useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -51,25 +51,26 @@ export default function OrderManagerPanel() {
     setPage(0);
   };
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/customer/order/getListOfOrdersForManager", {
+    axios.get('http://localhost:8080/rest/api/customer/order/getListOfOrdersForManager', {
       headers: {
         Authorization: `Bearer ${savedToken}`,
       },
-      params: {size: rowsPerPage, page: page + 1}
-    }).then(response => {setData(response.data.content)
-                        setCount(response.data)
-                      console.log(response.data.content)}
-    )
-  },[page,rowsPerPage])
+      params: { size: rowsPerPage, page: page + 1 },
+    }).then((response) => {
+      setData(response.data.content);
+      setCount(response.data);
+      console.log(response.data.content);
+    });
+  }, [page, rowsPerPage]);
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 1000 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow> 
+            <TableRow>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -81,8 +82,8 @@ export default function OrderManagerPanel() {
               ))}
             </TableRow>
           </TableHead>
-         <TableBody> 
-            {data.map((order) => <OrderManagerRow key={order.orderId} order={order}/>)}
+          <TableBody>
+            {data.map((order) => <OrderManagerRow key={order.orderId} order={order} />)}
           </TableBody>
         </Table>
       </TableContainer>

@@ -1,43 +1,52 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
-import axios from "axios";
+import axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import { UserRow } from './UserRow';
 
 const columns = [
-  { id: 'orderId', label: 'Order Id', minWidth: 120 },
+  { id: 'profilePhotoPath', label: 'Profile Photo', minWidth: 120 },
   { id: 'email', label: 'Email', minWidth: 120 },
+  { id: 'firstName', label: 'First Name', minWidth: 100 },
   {
-    id: 'deliveryAddress',
-    label: 'Delivery Address',
+    id: 'lastName',
+    label: 'Last Name',
     minWidth: 120,
   },
   {
-    id: 'createdDate',
-    label: 'Created Date',
-    minWidth: 100, 
+    id: 'address',
+    label: 'Address',
+    minWidth: 100,
   },
   {
-    id: 'status',
-    label: 'Order Status',
+    id: 'phoneNumber',
+    label: 'Phone Number',
     minWidth: 120,
     format: (value) => value.toLocaleString('en-US'),
   },
+  {
+    id: 'company',
+    label: 'Company Name',
+    minWidth: 100,
+  },
+  {
+    id: 'accountStatus',
+    label: 'Account Status',
+    minWidth: 100,
+  },
 ];
 
-
-
-
-export default function RecentOrderManagerPanel() {
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [data, setData] = React.useState([])
-  const [count, setCount] = React.useState([])
+export default function UsersAdminPanel() {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [data, setData] = React.useState([]);
+  const [count, setCount] = React.useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -48,24 +57,25 @@ export default function RecentOrderManagerPanel() {
     setPage(0);
   };
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/customer/order/getListOfOrdersForManager", {
+    axios.get('http://localhost:8080/rest/api/user/getUsersList', {
       headers: {
         Authorization: `Bearer ${savedToken}`,
       },
-      params: {size: rowsPerPage, page: page + 1}
-    }).then(response => {setData(response.data.content)
-                        setCount(response.data)}
-    )
-  },[page,rowsPerPage])
+      params: { size: rowsPerPage, page: page + 1 },
+    }).then((response) => {
+      setData(response.data.content);
+      setCount(response.data);
+    });
+  }, [page, rowsPerPage]);
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
+      <TableContainer sx={{ maxHeight: 700, maxWidth: 1800 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow> 
+            <TableRow>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -75,26 +85,13 @@ export default function RecentOrderManagerPanel() {
                   {column.label}
                 </TableCell>
               ))}
+              <TableCell>
+                Apply Changes
+              </TableCell>
             </TableRow>
           </TableHead>
-         <TableBody> 
-            {data
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+          <TableBody>
+            {data.map((user) => <UserRow key={user.email} user={user} />)}
           </TableBody>
         </Table>
       </TableContainer>

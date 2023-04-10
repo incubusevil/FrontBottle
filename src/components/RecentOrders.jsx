@@ -18,7 +18,7 @@ const columns = [
   {
     id: 'address',
     label: 'Address',
-    minWidth: 100, 
+    minWidth: 100,
   },
   {
     id: 'phoneNumber',
@@ -36,25 +36,25 @@ const columns = [
 export default function RecentOrder() {
   const [pagination, setPagination] = React.useState({
     page: 0,
-    size:  10,
-   })
-   const [data, setData] = React.useState([])
+    size: 10,
+  });
+  const [data, setData] = React.useState([]);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/user/getUsersList", {
+    axios.get('http://localhost:8080/rest/api/user/getUsersList', {
       headers: {
         Authorization: `Bearer ${savedToken}`,
       },
-      params: {...pagination, page: pagination.page + 1}
-    }).then(response => setData(response.data.content))
-  },[pagination])
+      params: { ...pagination, page: pagination.page + 1 },
+    }).then((response) => setData(response.data.content));
+  }, [pagination]);
 
-const handleChangePagination = (value , type) => {
-  setPagination({...pagination, [type]: value });
-  console.log(pagination)
-  
-  console.log(data);
+  const handleChangePagination = (value, type) => {
+    setPagination({ ...pagination, [type]: value });
+    console.log(pagination);
+
+    console.log(data);
   };
 
   return (
@@ -62,7 +62,7 @@ const handleChangePagination = (value , type) => {
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow> 
+            <TableRow>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -74,24 +74,22 @@ const handleChangePagination = (value , type) => {
               ))}
             </TableRow>
           </TableHead>
-         <TableBody> 
+          <TableBody>
             {data
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+              .map((row) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  {columns.map((column) => {
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align}>
+                        {column.format && typeof value === 'number'
+                          ? column.format(value)
+                          : value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -101,8 +99,8 @@ const handleChangePagination = (value , type) => {
         count={data.totalElements}
         rowsPerPage={pagination.size}
         page={pagination.page}
-        onPageChange={()=>handleChangePagination('page')}
-        onRowsPerPageChange={()=>handleChangePagination('rowsPerPage')}
+        onPageChange={() => handleChangePagination('page')}
+        onRowsPerPageChange={() => handleChangePagination('rowsPerPage')}
       />
     </Paper>
   );

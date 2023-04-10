@@ -1,51 +1,51 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from "@mui/material/Box";
-import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { Link as RouteLink, Route, Routes } from "react-router-dom";
-import CreateOrder from "../components/CreateOrder";
-import CustomersOrder from "../components/CustomersOrder";
-import CurrentOrder from "../components/CurrentOrder";
-import CustomersOperatorPanel from "../components/CustomersOperatorPanel";
-import HomeIcon from "@mui/icons-material/Home";
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Link as RouteLink, Route, Routes } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
 import Badge from '@mui/material/Badge';
+import CreateOrder from '../components/CreateOrder';
+import CustomersOrder from '../components/CustomersOrder';
+import CurrentOrder from '../components/CurrentOrder';
+import CustomersOperatorPanel from '../components/CustomersOperatorPanel';
 
 const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
+  transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
+    transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
 }));
 
-export const OperatorPanel = ({ handleLogout }) => {
+export function OperatorPanel({ handleLogout }) {
   const [items, setItems] = React.useState([]);
   const [itemsInCart, setItemsInCart] = React.useState(0);
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="absolute" open={false}>
         <Toolbar
           sx={{
-            pr: "24px", // keep right padding when drawer closed
+            pr: '24px', // keep right padding when drawer closed
           }}
         >
           <Typography
@@ -57,15 +57,15 @@ export const OperatorPanel = ({ handleLogout }) => {
           >
             Operator Dashboard
           </Typography>
-              <IconButton
-                color="inherit"
-                component={RouteLink}
-                to="/CurrentOrder"
-              >
-                <Badge badgeContent={itemsInCart} color="secondary">
-                <ShoppingCartIcon />
-                </Badge>
-              </IconButton>
+          <IconButton
+            color="inherit"
+            component={RouteLink}
+            to="/CurrentOrder"
+          >
+            <Badge badgeContent={itemsInCart} color="secondary">
+              <ShoppingCartIcon />
+            </Badge>
+          </IconButton>
           <IconButton
             color="inherit"
             component={RouteLink}
@@ -82,13 +82,12 @@ export const OperatorPanel = ({ handleLogout }) => {
       <Box
         component="main"
         sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
+          backgroundColor: (theme) => (theme.palette.mode === 'light'
+            ? theme.palette.grey[100]
+            : theme.palette.grey[900]),
           flexGrow: 1,
-          height: "100vh",
-          overflow: "auto",
+          height: '100vh',
+          overflow: 'auto',
         }}
       >
         <Toolbar />
@@ -107,4 +106,4 @@ export const OperatorPanel = ({ handleLogout }) => {
       </Box>
     </Box>
   );
-};
+}

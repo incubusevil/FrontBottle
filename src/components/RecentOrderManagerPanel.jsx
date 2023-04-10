@@ -1,52 +1,40 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
-import axios from "axios";
+import axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { UserRow } from './UserRow';
+import TablePagination from '@mui/material/TablePagination';
 
 const columns = [
-  { id: 'profilePhotoPath', label: 'Profile Photo', minWidth: 120 },
+  { id: 'orderId', label: 'Order Id', minWidth: 120 },
   { id: 'email', label: 'Email', minWidth: 120 },
-  { id: 'firstName', label: 'First Name', minWidth: 100 },
   {
-    id: 'lastName',
-    label: 'Last Name',
+    id: 'deliveryAddress',
+    label: 'Delivery Address',
     minWidth: 120,
   },
   {
-    id: 'address',
-    label: 'Address',
-    minWidth: 100, 
+    id: 'createdDate',
+    label: 'Created Date',
+    minWidth: 100,
   },
   {
-    id: 'phoneNumber',
-    label: 'Phone Number',
+    id: 'status',
+    label: 'Order Status',
     minWidth: 120,
     format: (value) => value.toLocaleString('en-US'),
   },
-  {
-    id: 'company',
-    label: 'Company Name',
-    minWidth: 100,
-  },
-  {
-    id: 'accountStatus',
-    label: 'Account Status',
-    minWidth: 100,
-  },
 ];
 
-export default function UsersAdminPanel() {
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [data, setData] = React.useState([])
-  const [count, setCount] = React.useState([])
+export default function RecentOrderManagerPanel() {
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [data, setData] = React.useState([]);
+  const [count, setCount] = React.useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -57,24 +45,25 @@ export default function UsersAdminPanel() {
     setPage(0);
   };
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/user/getUsersList", {
+    axios.get('http://localhost:8080/rest/api/customer/order/getListOfOrdersForManager', {
       headers: {
-               Authorization: `Bearer ${savedToken}`,
-             },
-      params: {size: rowsPerPage, page: page + 1}
-    }).then(response => {setData(response.data.content)
-                        setCount(response.data)}
-    )
-  },[page,rowsPerPage])
+        Authorization: `Bearer ${savedToken}`,
+      },
+      params: { size: rowsPerPage, page: page + 1 },
+    }).then((response) => {
+      setData(response.data.content);
+      setCount(response.data);
+    });
+  }, [page, rowsPerPage]);
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 700, maxWidth: 1800 }}>
+      <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow> 
+            <TableRow>
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -84,13 +73,24 @@ export default function UsersAdminPanel() {
                   {column.label}
                 </TableCell>
               ))}
-              <TableCell>
-                    Apply Changes
-                  </TableCell>
             </TableRow>
           </TableHead>
-         <TableBody> 
-            {data.map((user) => <UserRow key={user.email} user={user}/>)}
+          <TableBody>
+            {data
+              .map((row) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  {columns.map((column) => {
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align}>
+                        {column.format && typeof value === 'number'
+                          ? column.format(value)
+                          : value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>

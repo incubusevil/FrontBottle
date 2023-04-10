@@ -1,19 +1,19 @@
-import * as React from "react";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import Button from "@mui/material/Button";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import axios from "axios";
+import * as React from 'react';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import axios from 'axios';
 
-export const OrderManagerRow = ({ order }) => {
+export function OrderManagerRow({ order }) {
   const [status, setStatus] = React.useState(order.status);
 
   const handleSubmit = async () => {
-    const email = order.email;
+    const { email } = order;
     console.log(email, status);
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/user/setNewOrderStatus", {
+    axios.get('http://localhost:8080/rest/api/user/setNewOrderStatus', {
       headers: {
         Authorization: `Bearer ${savedToken}`,
       },
@@ -38,16 +38,16 @@ export const OrderManagerRow = ({ order }) => {
         </Select>
       </TableCell>
       <TableCell>
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        onClick={handleSubmit}
-        sx={{ mt: 1, mb: 1 }}
-      >
-        Submit
-      </Button>
-    </TableCell>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          onClick={handleSubmit}
+          sx={{ mt: 1, mb: 1 }}
+        >
+          Submit
+        </Button>
+      </TableCell>
     </TableRow>
   );
-};
+}

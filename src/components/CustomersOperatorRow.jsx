@@ -1,26 +1,25 @@
-import * as React from "react";
-import TableCell from "@mui/material/TableCell";
-import TableRow from "@mui/material/TableRow";
-import axios from "axios";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import { Link as RouteLink } from "react-router-dom";
+import * as React from 'react';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import axios from 'axios';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import { Link as RouteLink } from 'react-router-dom';
 
-export const CustomersOperatorRow = ({ user }) => {
-
+export function CustomersOperatorRow({ user }) {
   const [orderId, setOrderId] = React.useState();
 
   const hanldeCreateOrder = async () => {
     console.log(user);
-    const savedToken = localStorage.getItem("token");
+    const savedToken = localStorage.getItem('token');
     axios
       .get(
-        "http://localhost:8080/rest/api/bottles/createOrder",
+        'http://localhost:8080/rest/api/bottles/createOrder',
         {
           headers: {
             Authorization: `Bearer ${savedToken}`,
           },
-        }
+        },
       )
       .then((response) => {
         setOrderId(response.data.orderId);
@@ -33,9 +32,9 @@ export const CustomersOperatorRow = ({ user }) => {
         <Avatar
           src={user.profilePhotoPath}
           style={{
-            margin: "10px",
-            width: "60px",
-            height: "60px",
+            margin: '10px',
+            width: '60px',
+            height: '60px',
           }}
         />
       </TableCell>
@@ -72,4 +71,4 @@ export const CustomersOperatorRow = ({ user }) => {
       </TableCell>
     </TableRow>
   );
-};
+}

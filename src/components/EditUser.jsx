@@ -1,19 +1,19 @@
-import * as React from "react";
-import { useState } from "react";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import axios from "axios";
-import Paper from "@mui/material/Paper";
-import { Container } from "@mui/system";
-import Dialog from "@mui/material/Dialog";
+import * as React from 'react';
+import { useState } from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import axios from 'axios';
+import Paper from '@mui/material/Paper';
+import { Container } from '@mui/system';
+import Dialog from '@mui/material/Dialog';
 
 export function EditUser({ user: userData }) {
-  const rolename = "CUSTOMER";
+  const rolename = 'CUSTOMER';
   const roles = [{ rolename }];
 
   const [open, setOpen] = React.useState(false);
@@ -40,10 +40,10 @@ export function EditUser({ user: userData }) {
     const company = event.target?.[10].value;
     const password = event.target?.[12].value;
 
-    const savedToken = localStorage.getItem("token");
+    const savedToken = localStorage.getItem('token');
     console.log(roles);
     axios
-      .post("http://localhost:8080/rest/api/user/UpdateUser", {
+      .post('http://localhost:8080/rest/api/user/UpdateUser', {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },
@@ -60,31 +60,29 @@ export function EditUser({ user: userData }) {
   };
 
   const [profilePhotoUrl, setProfilePhotoUrl] = useState(
-    userData.profilePhotoPath
+    userData.profilePhotoPath,
   );
-  
-  const [changes, setChanges] = useState(true
-  );
+
+  const [changes, setChanges] = useState(true);
 
   const handleChange = async (event) => {
     event.preventDefault();
-    setChanges(false)
-  }
-
+    setChanges(false);
+  };
 
   const handleFileSelect = async (event) => {
     try {
       const formData = new FormData();
-      formData.append("file", event.target.files[0]);
-      const savedToken = localStorage.getItem("token");
+      formData.append('file', event.target.files[0]);
+      const savedToken = localStorage.getItem('token');
       const response = await axios.post(
-        "http://localhost:8080/rest/api/user/photos",
+        'http://localhost:8080/rest/api/user/photos',
         formData,
         {
           headers: {
             Authorization: `Bearer ${savedToken}`,
           },
-        }
+        },
       );
 
       setProfilePhotoUrl(response.data);
@@ -94,57 +92,56 @@ export function EditUser({ user: userData }) {
   };
 
   return (
-    <>
-      <Box>
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-          onClick={handleClickOpen}
-        >
-          Edit User
-        </Button>
-        <Dialog open={open} onClose={handleClose} sx={{ height: 750, mt: 15 }}>
-          <Paper>
-            <Container component="main" maxWidth="xs">
+    <Box>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        onClick={handleClickOpen}
+      >
+        Edit User
+      </Button>
+      <Dialog open={open} onClose={handleClose} sx={{ height: 750, mt: 15 }}>
+        <Paper>
+          <Container component="main" maxWidth="xs">
+            <Box
+              sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <IconButton variant="contained" component="label">
+                <Avatar
+                  src={profilePhotoUrl}
+                  style={{
+                    margin: '10px',
+                    width: '60px',
+                    height: '60px',
+                  }}
+                />
+                <input
+                  hidden
+                  accept="image/*"
+                  multiple
+                  type="file"
+                  onChange={handleFileSelect}
+                />
+              </IconButton>
+              <Typography component="h1" variant="h5">
+                Edit User
+              </Typography>
               <Box
-                sx={{
-                  marginTop: 8,
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
+                component="form"
+                noValidate
+                onSubmit={handleSubmit}
+                sx={{ mt: 3 }}
               >
-                <IconButton variant="contained" component="label">
-                  <Avatar
-                    src={profilePhotoUrl}
-                    style={{
-                      margin: "10px",
-                      width: "60px",
-                      height: "60px",
-                    }}
-                  />
-                  <input
-                    hidden
-                    accept="image/*"
-                    multiple
-                    type="file"
-                    onChange={handleFileSelect}
-                  />
-                </IconButton>
-                <Typography component="h1" variant="h5">
-                  Edit User
-                </Typography>
-                <Box
-                  component="form"
-                  noValidate
-                  onSubmit={handleSubmit}
-                  sx={{ mt: 3 }}
-                >
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
                         autoComplete="given-name"
                         name="firstName"
                         required
@@ -155,9 +152,9 @@ export function EditUser({ user: userData }) {
                         defaultValue={userData.firstName}
                         onChange={handleChange}
                       />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
                         required
                         fullWidth
                         id="lastName"
@@ -167,9 +164,9 @@ export function EditUser({ user: userData }) {
                         defaultValue={userData.lastName}
                         onChange={handleChange}
                       />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
                         required
                         fullWidth
                         id="email"
@@ -179,9 +176,9 @@ export function EditUser({ user: userData }) {
                         defaultValue={userData.email}
                         onChange={handleChange}
                       />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
                         required
                         fullWidth
                         id="address"
@@ -191,9 +188,9 @@ export function EditUser({ user: userData }) {
                         defaultValue={userData.address}
                         onChange={handleChange}
                       />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
                         required
                         fullWidth
                         id="phoneNumber"
@@ -203,9 +200,9 @@ export function EditUser({ user: userData }) {
                         defaultValue={userData.phoneNumber}
                         onChange={handleChange}
                       />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
                         required
                         fullWidth
                         id="company"
@@ -215,9 +212,9 @@ export function EditUser({ user: userData }) {
                         defaultValue={userData.company}
                         onChange={handleChange}
                       />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
                         required
                         fullWidth
                         name="password"
@@ -228,24 +225,22 @@ export function EditUser({ user: userData }) {
                         defaultValue={userData.password}
                         onChange={handleChange}
                       />
-                    </Grid>
                   </Grid>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    disabled = {changes}
-                    
-                  >
-                    Apply Changes
-                  </Button>
-                </Box>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                  disabled={changes}
+                >
+                  Apply Changes
+                </Button>
               </Box>
-            </Container>
-          </Paper>
-        </Dialog>
-      </Box>
-    </>
+            </Box>
+          </Container>
+        </Paper>
+      </Dialog>
+    </Box>
   );
 }
