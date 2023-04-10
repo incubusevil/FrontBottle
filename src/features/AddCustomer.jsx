@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -78,7 +77,6 @@ function CreateCustomer() {
       <Dialog open={open} onClose={handleClose} sx={{ height: 1000, mt: 4 }}>
         <Paper>
           <Grid xs={6}>
-            <CssBaseline />
             <Container component="main" maxWidth="xs">
               <Box
                 sx={{

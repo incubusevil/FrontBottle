@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -151,7 +150,6 @@ function CreateUser() {
       <Dialog open={open} onClose={handleClose} sx={{ height: 750, mt: 15 }}>
         <Paper>
           <Grid xs={6}>
-            <CssBaseline />
             <Container component="main" maxWidth="xs">
               <Box
                 sx={{

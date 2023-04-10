@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import { Link as RouteLink, Route, Routes } from 'react-router-dom';
-import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
@@ -83,7 +82,6 @@ export function ManagerPanel() {
   };
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
       <AppBar position="absolute" open>
         <Toolbar
           sx={{

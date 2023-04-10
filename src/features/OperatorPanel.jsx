@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { styled } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -48,7 +47,6 @@ export function OperatorPanel() {
   const [itemsInCart, setItemsInCart] = useState(0);
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
       <AppBar position="absolute" open={false}>
         <Toolbar
           sx={{

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import {
-  Avatar, CssBaseline, Box, Typography, Grid, Paper,
+  Avatar, Box, Typography, Grid, Paper,
 } from '@mui/material';
 import axios from 'axios';
 import decode from 'jwt-decode';
@@ -24,7 +24,6 @@ export function LoginPage() {
 
   return (
     <Grid container component="main" sx={{ height: '100vh' }}>
-      <CssBaseline />
       <Grid
         item
         xs={false}
