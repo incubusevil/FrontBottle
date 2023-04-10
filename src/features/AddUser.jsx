@@ -58,10 +58,10 @@ function CreateUser() {
     'http://localhost:8080/photos/test.png',
   );
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
+  const [personName, setPersonName] = useState([]);
 
   const handleChange = (event) => {
     const {

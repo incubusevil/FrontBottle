@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import Table from '@mui/material/Table';
@@ -37,10 +37,10 @@ const columns = [
 ];
 
 export default function OrderManagerPanel() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [data, setData] = React.useState([]);
-  const [count, setCount] = React.useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [data, setData] = useState([]);
+  const [count, setCount] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -51,7 +51,7 @@ export default function OrderManagerPanel() {
     setPage(0);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const savedToken = localStorage.getItem('token');
     axios.get('http://localhost:8080/rest/api/customer/order/getListOfOrdersForManager', {
       headers: {

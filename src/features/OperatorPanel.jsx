@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
@@ -15,6 +15,7 @@ import CreateOrder from '../components/CreateOrder';
 import CustomersOrder from '../components/CustomersOrder';
 import CurrentOrder from '../components/CurrentOrder';
 import CustomersOperatorPanel from '../components/CustomersOperatorPanel';
+import { Context } from '../app/providers';
 
 const drawerWidth = 240;
 
@@ -36,9 +37,15 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export function OperatorPanel({ handleLogout }) {
-  const [items, setItems] = React.useState([]);
-  const [itemsInCart, setItemsInCart] = React.useState(0);
+export function OperatorPanel() {
+  const [context, setContext] = useContext(Context);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setContext({ ...context, user: null });
+  };
+  const [items, setItems] = useState([]);
+  const [itemsInCart, setItemsInCart] = useState(0);
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

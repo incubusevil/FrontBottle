@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 
 export function OrderManagerRow({ order }) {
-  const [status, setStatus] = React.useState(order.status);
+  const [status, setStatus] = useState(order.status);
 
   const handleSubmit = async () => {
     const { email } = order;

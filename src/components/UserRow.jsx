@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import axios from 'axios';
@@ -8,8 +8,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { EditUser } from './EditUser';
 
 export function UserRow({ user }) {
-  const [accountStatus, setAccountStatus] = React.useState(user.accountStatus);
-  const [accountStatusBool, setAccountStatusBool] = React.useState(user.accountStatus === 'ACTIVE');
+  const [accountStatus, setAccountStatus] = useState(user.accountStatus);
+  const [accountStatusBool, setAccountStatusBool] = useState(user.accountStatus === 'ACTIVE');
 
   const changeStatus = (e) => {
     const { email } = user;

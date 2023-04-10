@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import Table from '@mui/material/Table';
@@ -14,34 +14,22 @@ import { CustomersOperatorRow } from './CustomersOperatorRow';
 const columns = [
   { id: 'email', label: 'Email', minWidth: 120 },
   { id: 'firstName', label: 'First Name', minWidth: 120 },
-  {
-    id: 'lastName',
-    label: 'Last Name',
-    minWidth: 120,
-  },
-  {
-    id: 'address',
-    label: 'Address',
-    minWidth: 100,
-  },
+  { id: 'lastName', label: 'Last Name', minWidth: 120 },
+  { id: 'address', label: 'Address', minWidth: 100 },
   {
     id: 'phoneNumber',
     label: 'Phone Number',
     minWidth: 120,
     format: (value) => value.toLocaleString('en-US'),
   },
-  {
-    id: 'company',
-    label: 'Company Name',
-    minWidth: 100,
-  },
+  { id: 'company', label: 'Company Name', minWidth: 100 },
 ];
 
 export default function CurrentOrder() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [data, setData] = React.useState([]);
-  const [count, setCount] = React.useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [data, setData] = useState([]);
+  const [count, setCount] = useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -52,7 +40,7 @@ export default function CurrentOrder() {
     setPage(0);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const savedToken = localStorage.getItem('token');
     axios
       .get('http://localhost:8080/rest/api/user/getCustomersList', {

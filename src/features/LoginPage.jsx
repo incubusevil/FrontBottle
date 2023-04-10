@@ -1,10 +1,27 @@
+import React, { useContext } from 'react';
 import {
   Avatar, CssBaseline, Box, Typography, Grid, Paper,
 } from '@mui/material';
+import axios from 'axios';
+import decode from 'jwt-decode';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { LoginForm, Copyright } from '../components';
+import { Context } from '../app/providers';
 
-export function LoginPage({ handleSubmit }) {
+export function LoginPage() {
+  const [context, setContext] = useContext(Context);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const email = event.target?.[0].value;
+    const password = event.target?.[2].value;
+    axios.post('http://localhost:8080/rest/api/auth/login', { email, password })
+      .then((response) => {
+        setContext({ ...context, user: decode(response.data) });
+        localStorage.setItem('token', response.data);
+      });
+  };
+
   return (
     <Grid container component="main" sx={{ height: '100vh' }}>
       <CssBaseline />

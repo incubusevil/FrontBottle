@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -18,7 +17,7 @@ function CreateCustomer() {
     { rolename },
   ];
 
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -130,75 +129,75 @@ function CreateCustomer() {
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                    autoComplete="given-name"
-                    name="firstName"
-                    required
-                    fullWidth
-                    id="firstName"
-                    label="First Name"
-                    autoFocus
-                  />
+                      autoComplete="given-name"
+                      name="firstName"
+                      required
+                      fullWidth
+                      id="firstName"
+                      label="First Name"
+                      autoFocus
+                    />
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <TextField
-                    required
-                    fullWidth
-                    id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="family-name"
-                  />
+                      required
+                      fullWidth
+                      id="lastName"
+                      label="Last Name"
+                      name="lastName"
+                      autoComplete="family-name"
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                  />
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                    required
-                    fullWidth
-                    id="address"
-                    label="Address"
-                    name="address"
-                    autoComplete="address"
-                  />
+                      required
+                      fullWidth
+                      id="address"
+                      label="Address"
+                      name="address"
+                      autoComplete="address"
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                    required
-                    fullWidth
-                    id="phoneNumber"
-                    label="Phone Number"
-                    name="phoneNumber"
-                    autoComplete="phoneNumber"
-                  />
+                      required
+                      fullWidth
+                      id="phoneNumber"
+                      label="Phone Number"
+                      name="phoneNumber"
+                      autoComplete="phoneNumber"
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                    required
-                    fullWidth
-                    id="company"
-                    label="Company Name"
-                    name="cpmpany"
-                    autoComplete="company"
-                  />
+                      required
+                      fullWidth
+                      id="company"
+                      label="Company Name"
+                      name="cpmpany"
+                      autoComplete="company"
+                    />
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                  />
+                      required
+                      fullWidth
+                      name="password"
+                      label="Password"
+                      type="password"
+                      id="password"
+                      autoComplete="new-password"
+                    />
                   </Grid>
                 </Grid>
                 <Button

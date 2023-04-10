@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import { Link as RouteLink } from 'react-router-dom';
 
 export function CustomersOperatorRow({ user }) {
-  const [orderId, setOrderId] = React.useState();
+  const [orderId, setOrderId] = useState();
 
   const hanldeCreateOrder = async () => {
     console.log(user);

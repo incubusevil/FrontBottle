@@ -1,5 +1,6 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { styled } from '@mui/material/styles';
+import { Link as RouteLink, Route, Routes } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -19,13 +20,13 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PeopleIcon from '@mui/icons-material/People';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import { Link as RouteLink, Route, Routes } from 'react-router-dom';
 import ManagerDashboard from './ManagerDashboard';
 import Orders from './ManagerOrders';
 import ManagerCustomers from './ManagerCustomers';
 import CurentMonthSales from './CurentMonthSales';
 import LastQuarterSales from './LastQuarterSales';
 import YearEndSales from './YearEndSales';
+import { Context } from '../app/providers';
 
 const drawerWidth = 240;
 
@@ -73,7 +74,13 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export function ManagerPanel({ handleLogout }) {
+export function ManagerPanel() {
+  const [context, setContext] = useContext(Context);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setContext({ ...context, user: null });
+  };
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

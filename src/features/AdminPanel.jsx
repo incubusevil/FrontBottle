@@ -1,15 +1,14 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { styled } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import Container from '@mui/material/Container';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AdminDashboard from './AdminDashboard';
+import { Context } from '../app/providers';
 
 const drawerWidth = 240;
 
@@ -31,7 +30,13 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export function AdminPanel({ handleLogout }) {
+export function AdminPanel() {
+  const [context, setContext] = useContext(Context);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setContext({ ...context, user: null });
+  };
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -73,6 +78,9 @@ export function AdminPanel({ handleLogout }) {
   );
 }
 
-// reviw flow for sales department application is for internal use in company, undesrtand flow of order and bottles wich is going in this flow
-
-// static content load url photo from db and insert in to table for each user
+/**
+ * reviw flow for sales department application is for internal use in company,
+ * undesrtand flow of order and bottles wich is going in this flow
+ *
+ * static content load url photo from db and insert in to table for each user
+ */

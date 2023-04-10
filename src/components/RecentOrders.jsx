@@ -1,11 +1,13 @@
-import * as React from 'react';
-import Link from '@mui/material/Link';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Title from './Title';
+import Paper from '@mui/material/Paper';
+import TableContainer from '@mui/material/TableContainer';
+import TablePagination from '@mui/material/TablePagination';
 
 const columns = [
   { id: 'email', label: 'Email', minWidth: 120 },
@@ -34,13 +36,13 @@ const columns = [
 ];
 
 export default function RecentOrder() {
-  const [pagination, setPagination] = React.useState({
+  const [pagination, setPagination] = useState({
     page: 0,
     size: 10,
   });
-  const [data, setData] = React.useState([]);
+  const [data, setData] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const savedToken = localStorage.getItem('token');
     axios.get('http://localhost:8080/rest/api/user/getUsersList', {
       headers: {

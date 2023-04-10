@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useTheme } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -7,13 +9,12 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import { Paper } from '@mui/material';
+import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import TablePagination from '@mui/material/TablePagination';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import axios from 'axios';
-import { Box } from '@mui/system';
 import Stack from '@mui/material/Stack';
 import Slider from '@mui/material/Slider';
 import FormGroup from '@mui/material/FormGroup';
@@ -24,7 +25,6 @@ import Chip from '@mui/material/Chip';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import { useTheme } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 
 function valuetext(value) {
@@ -43,18 +43,7 @@ const MenuProps = {
 };
 
 const names = [
-  '0.33',
-  '0.5',
-  '0.7',
-  '1',
-  '1.5',
-  '2',
-  '3',
-  '5',
-  '7',
-  '9',
-  '12',
-  '15',
+  '0.33', '0.5', '0.7', '1', '1.5', '2', '3', '5', '7', '9', '12', '15',
 ];
 
 function getStyles(name, personName, theme) {
@@ -67,27 +56,27 @@ function getStyles(name, personName, theme) {
 }
 
 export default function CreateOrder() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(9);
-  const [data, setData] = React.useState([]);
-  const [count, setCount] = React.useState([]);
-  const [price, setPrice] = React.useState([7, 50]);
-  const [minPrice, setMinPrice] = React.useState(7);
-  const [maxPrice, setMaxPrice] = React.useState(50);
-  const [packaging, setPackaging] = React.useState({
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(9);
+  const [data, setData] = useState([]);
+  const [count, setCount] = useState([]);
+  const [price, setPrice] = useState([7, 50]);
+  const [minPrice, setMinPrice] = useState(7);
+  const [maxPrice, setMaxPrice] = useState(50);
+  const [packaging, setPackaging] = useState({
     Plastic: false,
     Paper: false,
     Glass: false,
     Can: false,
   });
-  const [volume, setVolume] = React.useState([]);
-  const [categories, setCategories] = React.useState({
+  const [volume, setVolume] = useState([]);
+  const [categories, setCategories] = useState({
     Mineral: false,
     Soda: false,
     Juice: false,
     Energy: false,
   });
-  const [sugar, setSugar] = React.useState();
+  const [sugar, setSugar] = useState();
   const theme = useTheme();
 
   const handleChangePage = (event, newPage) => {
@@ -106,8 +95,6 @@ export default function CreateOrder() {
     setPrice(typeof value === 'string' ? value.split(',') : value);
     setMinPrice(event.target.value?.[0]);
     setMaxPrice(event.target.value?.[1]);
-    console.log(minPrice);
-    console.log(maxPrice);
   };
 
   const handleChangeVolume = (event) => {
@@ -115,7 +102,6 @@ export default function CreateOrder() {
       target: { value },
     } = event;
     setVolume(typeof value === 'string' ? value.split(',') : value);
-    console.log(volume);
   };
 
   const handleChangeCategories = (event) => {
@@ -123,7 +109,6 @@ export default function CreateOrder() {
       target: { value },
     } = event;
     setCategories({ ...categories, [value]: !categories[value] });
-    console.log(categories);
   };
 
   const handleChangePackaging = (event) => {
@@ -131,20 +116,16 @@ export default function CreateOrder() {
       target: { value },
     } = event;
     setPackaging({ ...packaging, [value]: !packaging[value] });
-    console.log(packaging);
   };
 
   const handleChangeSugar = (event) => {
     const {
       target: { value },
     } = event;
-    console.log(event);
     setSugar(value);
-    console.log(sugar);
   };
 
-  React.useEffect(() => {
-    console.log(categories);
+  useEffect(() => {
     const savedToken = localStorage.getItem('token');
     const categoriesQuery = Object.keys(categories).filter(
       (key, index) => Object.values(categories)[index],
@@ -173,7 +154,6 @@ export default function CreateOrder() {
       .then((response) => {
         setData(response.data.content);
         setCount(response.data);
-        console.log(response.data.content);
       });
   }, [categories, packaging, minPrice, maxPrice, sugar, page, rowsPerPage]);
 
@@ -181,7 +161,6 @@ export default function CreateOrder() {
     const {
       target: { value },
     } = event;
-    console.log(value);
     const savedToken = localStorage.getItem('token');
     axios.get(
       'http://localhost:8080/rest/api/bottles/getSearchBottleByBrand',
@@ -199,7 +178,6 @@ export default function CreateOrder() {
       .then((response) => {
         setData(response.data.content);
         setCount(response.data);
-        console.log(response.data.content);
       });
   };
 
@@ -307,18 +285,18 @@ export default function CreateOrder() {
                 onChange={handleChangeVolume}
                 input={
                   <OutlinedInput id="select-multiple-chip" label="Volume" />
-                  }
+                }
                 renderValue={(selected) => (
                   <Box
                     sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 0.5,
-                      }}
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: 0.5,
+                    }}
                   >
                     {selected.map((value) => (
-                        <Chip key={value} label={value} />
-                      ))}
+                      <Chip key={value} label={value} />
+                    ))}
                   </Box>
                 )}
                 MenuProps={MenuProps}
@@ -385,22 +363,22 @@ export default function CreateOrder() {
                 <Grid item xs={2} sm={4} md={4} key={bottle.bottleId}>
                   <Card sx={{ maxWidth: 345 }}>
                     <CardMedia
-                        sx={{ height: 140 }}
-                        image="https://source.unsplash.com/random"
-                        title="test 1"
-                      />
+                      sx={{ height: 140 }}
+                      image="https://source.unsplash.com/random"
+                      title="test 1"
+                    />
                     <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                          {bottle.nameBottle}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {bottle.producer}
-                        </Typography>
-                      </CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        {bottle.nameBottle}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {bottle.producer}
+                      </Typography>
+                    </CardContent>
                     <CardActions>
-                        <Button size="small">Add to cart</Button>
-                        <Button size="small">Check stock</Button>
-                      </CardActions>
+                      <Button size="small">Add to cart</Button>
+                      <Button size="small">Check stock</Button>
+                    </CardActions>
                   </Card>
                 </Grid>
               ))}
