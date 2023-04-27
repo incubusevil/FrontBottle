@@ -12,9 +12,12 @@ import { Link as RouteLink, Route, Routes } from "react-router-dom";
 import CreateOrder from "../components/CreateOrder";
 import CustomersOrder from "../components/CustomersOrder";
 import CurrentOrder from "../components/CurrentOrder";
-import CustomersOperatorPanel from "../components/CustomersOperatorPanel";
 import HomeIcon from "@mui/icons-material/Home";
-import Badge from '@mui/material/Badge';
+import Badge from "@mui/material/Badge";
+import ShopIcon from "@mui/icons-material/Shop";
+import Tooltip , { tooltipClasses }from '@mui/material/Tooltip';
+import CardContent from '@mui/material/CardContent';
+import OperatorPanelOrders from "../components/OperatorPanelOrders";
 
 const drawerWidth = 240;
 
@@ -36,9 +39,23 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-export const OperatorPanel = ({ handleLogout }) => {
-  const [items, setItems] = React.useState([]);
-  const [itemsInCart, setItemsInCart] = React.useState(0);
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
+
+
+export const OperatorPanel = ({ handleLogout, user }) => {
+  const [numberOfPosition, setNumberOfPosition] = React.useState(0);
+  const [data, setData] = React.useState(0);
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -57,15 +74,46 @@ export const OperatorPanel = ({ handleLogout }) => {
           >
             Operator Dashboard
           </Typography>
-              <IconButton
-                color="inherit"
-                component={RouteLink}
-                to="/CurrentOrder"
-              >
-                <Badge badgeContent={itemsInCart} color="secondary">
-                <ShoppingCartIcon />
-                </Badge>
-              </IconButton>
+          <IconButton color="inherit" component={RouteLink} to="/CreateOrder">
+            <ShopIcon />
+          </IconButton>
+
+            <HtmlTooltip title={
+          <React.Fragment>
+              <div>
+                <Box>
+                    <CardContent>
+                      <Typography
+                        sx={{ fontSize: 14 }}
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                       Order ID : {data.orderId}
+                      </Typography>
+                      <Typography variant="h5" component="div">
+                       Customer : {data.company}
+                      </Typography>
+                      <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                       Number of Position : {numberOfPosition}
+                      </Typography>
+                      <Typography variant="body2">
+                       Order Created Date : {data.createdDate}
+                      </Typography>
+                    </CardContent>
+                    </Box>
+                    </div>
+          </React.Fragment>
+        }>
+                <IconButton
+                  color="inherit"
+                  component={RouteLink}
+                  to="/CurrentOrder"
+                >
+                  <Badge badgeContent={numberOfPosition} color="secondary">
+                    <ShoppingCartIcon />
+                  </Badge>
+                </IconButton>
+                </HtmlTooltip>
           <IconButton
             color="inherit"
             component={RouteLink}
@@ -95,14 +143,33 @@ export const OperatorPanel = ({ handleLogout }) => {
         <Routes>
           <Route
             path="/CustomersOperatorPanel"
-            element={<CustomersOperatorPanel />}
+            element={
+              <OperatorPanelOrders
+                setNumberOfPosition={setNumberOfPosition}
+                user={user}
+              />
+            }
           />
           <Route
             path="/CreateOrder"
-            element={<CreateOrder setItems={setItems} />}
+            element={<CreateOrder setNumberOfPosition={setNumberOfPosition} user={user} transferData={data} setTransferData={setData}/>}
           />
-          <Route path="/CustomersOrder" element={<CustomersOrder />} />
-          <Route path="/CurrentOrder" element={<CurrentOrder />} />
+          <Route
+            path="/CustomersOrder"
+            element={
+              <CustomersOrder setNumberOfPosition={setNumberOfPosition} />
+            }
+          />s
+          <Route
+            path="/CurrentOrder"
+            element={
+              <CurrentOrder
+                setNumberOfPosition={setNumberOfPosition}
+                data={data}
+                setData={setData}
+              />
+            }
+          />
         </Routes>
       </Box>
     </Box>

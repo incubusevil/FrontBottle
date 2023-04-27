@@ -57,6 +57,12 @@ import Dialog from '@mui/material/Dialog';
         company,
         password,
         roles,
+        headres
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${savedToken}`,
+        },
       })
       .then((response) => console.log(response.data));
   };

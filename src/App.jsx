@@ -7,8 +7,15 @@ import { AdminPanel } from "./features/AdminPanel";
 import { ManagerPanel } from "./features/ManagerPanel";
 import { OperatorPanel } from "./features/OperatorPanel";
 import { BrowserRouter as Router } from "react-router-dom";
+import CssBaseline from '@mui/material/CssBaseline';
 
 const theme = createTheme();
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 //move domain name in to global variable in configuration file
  
@@ -52,7 +59,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         {!user && <LoginPage handleSubmit={handleSubmit}/>}
         {isUserAdmin && <AdminPanel handleLogout={handleLogout}/>}
-        {isUserOperator && <OperatorPanel handleLogout={handleLogout}/>}
+        {isUserOperator && <OperatorPanel handleLogout={handleLogout} user={user}/>}
         {isUserManager && <ManagerPanel handleLogout={handleLogout}/>}
       </ThemeProvider>
     </Router>

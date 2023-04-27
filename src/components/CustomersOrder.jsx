@@ -9,37 +9,13 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Container } from '@mui/material';
+import { CustomersOrderRow } from './CustomersOrderRow';
 
 const columns = [
-    { id: 'profilePhotoPath', label: 'Profile Photo', minWidth: 120 },
-    { id: 'email', label: 'Email', minWidth: 120 },
-    { id: 'firstName', label: 'First Name', minWidth: 100 },
-    {
-      id: 'lastName',
-      label: 'Last Name',
-      minWidth: 120,
-    },
-    {
-      id: 'address',
-      label: 'Address',
-      minWidth: 100, 
-    },
-    {
-      id: 'phoneNumber',
-      label: 'Phone Number',
-      minWidth: 120,
-      format: (value) => value.toLocaleString('en-US'),
-    },
-    {
-      id: 'company',
-      label: 'Company Name',
-      minWidth: 100,
-    },
-    {
-      id: 'accountStatus',
-      label: 'Account Status',
-      minWidth: 100,
-    },
+    { id: 'orderId', label: 'Order Id', minWidth: 120 },
+    { id: 'createdDate', label: 'Created Date', minWidth: 120 },
+    { id: 'deliveryAddress', label: 'Delivery Address', minWidth: 100 },
+    { id: 'status', label: 'Order Status', minWidth: 120},
   ];
 
 export default function CustomersOrder() {
@@ -59,13 +35,21 @@ export default function CustomersOrder() {
 
   React.useEffect(()=>{
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/user/getUsersList", {
+    const profileId = localStorage.getItem('profileId')
+    console.log(profileId)
+    axios.post("http://localhost:8080/rest/api/customer/order/getListOfCustomersOrdersForOperator",  {
+      profileId: profileId,
+      size: rowsPerPage,
+      page: page + 1
+    },
+    {
       headers: {
-               Authorization: `Bearer ${savedToken}`,
-             },
-      params: {size: rowsPerPage, page: page + 1}
-    }).then(response => {setData(response.data.content)
-                        setCount(response.data)}
+        Authorization: `Bearer ${savedToken}`,
+      },
+    }).then(response => {
+                        v
+                        console.log(response.data.content)
+                      }
     )
   },[page,rowsPerPage])
 
@@ -86,30 +70,12 @@ export default function CustomersOrder() {
                 </TableCell>
               ))}
               <TableCell>
-                    Apply Changes
+                    View Details
                   </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === "number"
-                          ? column.format(value)
-                          : value}
-                      </TableCell>
-                    );
-                  })}
-                  <TableCell>
-                       Edit Order
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+          {data.map((order) => <CustomersOrderRow key={order.orderId} order={order}/>)}
           </TableBody>
         </Table>
       </TableContainer>
