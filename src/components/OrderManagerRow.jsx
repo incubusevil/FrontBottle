@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
+import url from "./url";
 
 export const OrderManagerRow = ({ order }) => {
   const [status, setStatus] = React.useState(order.status);
@@ -13,7 +14,7 @@ export const OrderManagerRow = ({ order }) => {
     const email = order.email;
     console.log(email, status);
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/user/setNewOrderStatus", {
+    axios.get(url+"/rest/api/user/setNewOrderStatus", {
       headers: {
         Authorization: `Bearer ${savedToken}`,
       },

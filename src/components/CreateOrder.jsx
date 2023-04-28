@@ -1,13 +1,8 @@
 import React from "react";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
-import { Paper } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import TablePagination from "@mui/material/TablePagination";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
@@ -26,6 +21,11 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import { useTheme } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
+import { ProductList } from "./ProductList";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import Autocomplete from "@mui/material/Autocomplete";
+import url from "./url";
 
 function valuetext(value) {
   return `${value}`;
@@ -66,7 +66,7 @@ function getStyles(name, personName, theme) {
   };
 }
 
-export default function CreateOrder() {
+export default function CreateOrder({ setNumberOfPosition, user , transferData, setTransferData}) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(9);
   const [data, setData] = React.useState([]);
@@ -74,12 +74,12 @@ export default function CreateOrder() {
   const [price, setPrice] = React.useState([7, 50]);
   const [minPrice, setMinPrice] = React.useState(7);
   const [maxPrice, setMaxPrice] = React.useState(50);
-  const [packaging, setPackaging] = React.useState({  
-      Plastic: false,
-      Paper: false,
-      Glass: false,
-      Can: false,
-});
+  const [packaging, setPackaging] = React.useState({
+    Plastic: false,
+    Paper: false,
+    Glass: false,
+    Can: false,
+  });
   const [volume, setVolume] = React.useState([]);
   const [categories, setCategories] = React.useState({
     Mineral: false,
@@ -89,6 +89,94 @@ export default function CreateOrder() {
   });
   const [sugar, setSugar] = React.useState();
   const theme = useTheme();
+  const [companies, setCompanies] = React.useState([]);
+  const [company, setCompany] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [selectCustomer, setSelectCustomer] = React.useState();
+
+  const handleClickOpen = () => {
+    setCompany(companies.map(({ company }) => ({ label: company })));
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    console.log(value);
+    const savedToken = localStorage.getItem("token");
+    axios
+      .get(
+        url+"/rest/api/user/getSearchListOfCustomersForOperator",
+        {
+          headers: {
+            Authorization: `Bearer ${savedToken}`,
+          },
+          params: {
+            search: value,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data);
+        setCompany(
+          response.data.map(({ company }) => ({
+            label: company,
+          }))
+        );
+      });
+  };
+
+  React.useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    axios
+      .get(
+        url+"/rest/api/user/getListOfCustomersForOperator",
+        {
+          headers: {
+            Authorization: `Bearer ${savedToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        setCompanies(response.data);
+        console.log(response.data);
+      });
+  }, []);
+
+  const hanldeCreateOrder = async () => {
+    const customer = companies.find((customer) => {
+      return customer.company === selectCustomer;
+    });
+    const savedToken = localStorage.getItem("token");
+    const createStatus = "Created";
+    console.log(user);
+    axios
+      .post(
+        url+"/rest/api/customer/order/createOrder",
+        {
+          profileId: customer.profileId,
+          address: customer.address,
+          status: createStatus,
+          operatorEmail: user.sub,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${savedToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        localStorage.setItem("orderId", response.data.orderId);
+        setTransferData(response.data)
+        setNumberOfPosition(0);
+        console.log(response.data);
+      });
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -99,7 +187,6 @@ export default function CreateOrder() {
     setPage(0);
   };
 
-
   const handleChangePrice = (event) => {
     const {
       target: { value },
@@ -109,7 +196,6 @@ export default function CreateOrder() {
     setMaxPrice(event.target.value?.[1]);
     console.log(minPrice);
     console.log(maxPrice);
-
   };
 
   const handleChangeVolume = (event) => {
@@ -118,7 +204,6 @@ export default function CreateOrder() {
     } = event;
     setVolume(typeof value === "string" ? value.split(",") : value);
     console.log(volume);
-
   };
 
   const handleChangeCategories = (event) => {
@@ -127,7 +212,6 @@ export default function CreateOrder() {
     } = event;
     setCategories({ ...categories, [value]: !categories[value] });
     console.log(categories);
-
   };
 
   const handleChangePackaging = (event) => {
@@ -136,7 +220,6 @@ export default function CreateOrder() {
     } = event;
     setPackaging({ ...packaging, [value]: !packaging[value] });
     console.log(packaging);
-
   };
 
   const handleChangeSugar = (event) => {
@@ -146,11 +229,10 @@ export default function CreateOrder() {
     console.log(event);
     setSugar(value);
     console.log(sugar);
-
   };
 
-    React.useEffect(() => {
-    console.log(categories)
+  React.useEffect(() => {
+    console.log(categories);
     const savedToken = localStorage.getItem("token");
     const categoriesQuery = Object.keys(categories).filter(
       (key, index) => Object.values(categories)[index]
@@ -158,9 +240,10 @@ export default function CreateOrder() {
     const packagingQuery = Object.keys(packaging).filter(
       (key, index) => Object.values(packaging)[index]
     );
+    console.log(url)
     axios
       .post(
-        "http://localhost:8080/rest/api/bottles/getListOfFilterBottles",
+        url+"/rest/api/bottles/getListOfFilterBottles",
         {
           categories: categoriesQuery,
           minPrice,
@@ -181,7 +264,7 @@ export default function CreateOrder() {
         setCount(response.data);
         console.log(response.data.content);
       });
-    },[categories, packaging, minPrice, maxPrice, sugar, page, rowsPerPage]) 
+  }, [categories, packaging, minPrice, maxPrice, sugar, page, rowsPerPage]);
 
   const handleSearch = async (event) => {
     const {
@@ -189,24 +272,22 @@ export default function CreateOrder() {
     } = event;
     console.log(value);
     const savedToken = localStorage.getItem("token");
-    axios.get(
-      "http://localhost:8080/rest/api/bottles/getSearchBottleByBrand",
-      {
+    axios
+      .get(url+"/rest/api/bottles/getSearchBottleByBrand", {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },
         params: {
           search: value,
-          page: page+1,
-          size: rowsPerPage
-        }
-      }
-    )
-    .then((response) => {
-      setData(response.data.content);
-      setCount(response.data);
-      console.log(response.data.content);
-    });
+          page: page + 1,
+          size: rowsPerPage,
+        },
+      })
+      .then((response) => {
+        setData(response.data.content);
+        setCount(response.data);
+        console.log(response.data.content);
+      });
   };
 
   return (
@@ -226,10 +307,83 @@ export default function CreateOrder() {
           }}
         >
           <Paper
-          sx={{
-            paddingTop: 2,
-            paddingBottom: 2,
-          }}>
+            sx={{
+              paddingTop: 2,
+              paddingBottom: 2,
+              mb: 2,
+            }}
+          >
+            <Grid
+              sx={{
+                ml: 5,
+                mt: 1,
+                mb: 1,
+                mr: 5,
+              }}
+            >
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                onClick={handleClickOpen}
+              >
+                Create Order
+              </Button>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                {" "}
+                <Box
+                  sx={{
+                    width: 400,
+                    height: 270,
+                  }}
+                >
+                  <Grid container>
+                    <Autocomplete
+                      disablePortal
+                      fullWidth
+                      id="combo-box-demo"
+                      options={company}
+                      sx={{ mt: 2, mb: 1, ml: 2, mr: 2 }}
+                      onInputChange={(event, newInputValue) => {
+                        setSelectCustomer(newInputValue);
+                      }}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          onChange={handleChange}
+                          label="Select Customer"
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <DialogActions>
+                    <Button
+                      onClick={(event) => {
+                        hanldeCreateOrder(event), handleClose();
+                      }}
+                      type="submit"
+                      variant="contained"
+                      fullWidth
+                      sx={{ mt: 15, mb: 2, ml: 2, mr: 2 }}
+                    >
+                      Confirm
+                    </Button>
+                  </DialogActions>
+                </Box>
+              </Dialog>
+            </Grid>
+          </Paper>
+          <Paper
+            sx={{
+              paddingTop: 2,
+              paddingBottom: 2,
+            }}
+          >
             <Grid
               sx={{
                 ml: 5,
@@ -277,7 +431,7 @@ export default function CreateOrder() {
               />
               <Typography gutterBottom variant="h5" component="div">
                 Packaging
-              </Typography> 
+              </Typography>
               <FormGroup onChange={handleChangePackaging}>
                 <FormControlLabel
                   control={<Checkbox />}
@@ -365,10 +519,11 @@ export default function CreateOrder() {
         </Box>
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Paper
-          sx={{
-            paddingTop: 2,
-            paddingBottom: 2,
-          }}>
+            sx={{
+              paddingTop: 2,
+              paddingBottom: 2,
+            }}
+          >
             <Container>
               <Grid
                 sx={{
@@ -379,7 +534,12 @@ export default function CreateOrder() {
                   paddingBottom: 2,
                 }}
               >
-                <TextField fullWidth label="Search" id="search" onChange={handleSearch}/>
+                <TextField
+                  fullWidth
+                  label="Search"
+                  id="search"
+                  onChange={handleSearch}
+                />
               </Grid>
               <Grid
                 container
@@ -387,27 +547,10 @@ export default function CreateOrder() {
                 columns={{ xs: 4, sm: 8, md: 12 }}
               >
                 {data.map((bottle) => (
-                  <Grid item xs={2} sm={4} md={4} key={bottle.bottleId}>
-                    <Card sx={{ maxWidth: 345 }}>
-                      <CardMedia
-                        sx={{ height: 140 }}
-                        image="https://source.unsplash.com/random"
-                        title="test 1"
-                      />
-                      <CardContent>
-                        <Typography gutterBottom variant="h5" component="div">
-                          {bottle.nameBottle}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {bottle.producer}
-                        </Typography>
-                      </CardContent>
-                      <CardActions>
-                        <Button size="small">Add to cart</Button>
-                        <Button size="small">Check stock</Button>
-                      </CardActions>
-                    </Card>
-                  </Grid>
+                  <ProductList
+                    bottle={bottle}
+                    setNumberOfPosition={setNumberOfPosition}
+                  />
                 ))}
               </Grid>
               <TablePagination

@@ -5,17 +5,26 @@ import axios from "axios";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import { Link as RouteLink } from "react-router-dom";
+import url from "./url";
 
-export const CustomersOperatorRow = ({ user }) => {
+export const CustomersOperatorRow = ({ user, setNumberOfPosition}) => {
 
-  const [orderId, setOrderId] = React.useState();
+  const handleProfileOrders = async () => {
+    localStorage.setItem('profileId', user.profileId);
+  }
 
   const hanldeCreateOrder = async () => {
-    console.log(user);
     const savedToken = localStorage.getItem("token");
+    const createStatus = "Created";
     axios
-      .get(
-        "http://localhost:8080/rest/api/bottles/createOrder",
+      .post(
+        url+"/rest/api/customer/order/createOrder",
+        {
+          profileId: user.profileId,
+          address: user.address,
+          status: createStatus,
+          operatorId
+        },
         {
           headers: {
             Authorization: `Bearer ${savedToken}`,
@@ -23,8 +32,10 @@ export const CustomersOperatorRow = ({ user }) => {
         }
       )
       .then((response) => {
-        setOrderId(response.data.orderId);
+        localStorage.setItem('orderId', response.data);
+        setNumberOfPosition(0);
       });
+      
   };
 
   return (
@@ -55,13 +66,14 @@ export const CustomersOperatorRow = ({ user }) => {
           variant="contained"
           sx={{ mt: 1, mb: 1 }}
         >
-          Submit
+          Create
         </Button>
       </TableCell>
       <TableCell>
         <Button
           component={RouteLink}
           to="/CustomersOrder"
+          onClick={handleProfileOrders}
           type="submit"
           fullWidth
           variant="contained"

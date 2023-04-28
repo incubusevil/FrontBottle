@@ -9,7 +9,8 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { Container } from '@mui/material';
-import { CustomersOrderRow } from './CustomersOrderRow';
+import { OrderRow } from './OrderRow';
+import url from './url';
 
 const columns = [
     { id: 'orderId', label: 'Order Id', minWidth: 120 },
@@ -37,7 +38,7 @@ export default function CustomersOrder() {
     const savedToken = localStorage.getItem('token');
     const profileId = localStorage.getItem('profileId')
     console.log(profileId)
-    axios.post("http://localhost:8080/rest/api/customer/order/getListOfCustomersOrdersForOperator",  {
+    axios.post(url+"/rest/api/customer/order/getListOfCustomersOrdersForOperator",  {
       profileId: profileId,
       size: rowsPerPage,
       page: page + 1
@@ -47,7 +48,8 @@ export default function CustomersOrder() {
         Authorization: `Bearer ${savedToken}`,
       },
     }).then(response => {
-                        v
+                        setData(response.data.content);
+                        setCount(response.data);
                         console.log(response.data.content)
                       }
     )
@@ -75,7 +77,7 @@ export default function CustomersOrder() {
             </TableRow>
           </TableHead>
           <TableBody>
-          {data.map((order) => <CustomersOrderRow key={order.orderId} order={order}/>)}
+          {data.map((order) => <OrderRow key={order.orderId} order={order}/>)}
           </TableBody>
         </Table>
       </TableContainer>

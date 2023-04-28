@@ -15,9 +15,10 @@ import CurrentOrder from "../components/CurrentOrder";
 import HomeIcon from "@mui/icons-material/Home";
 import Badge from "@mui/material/Badge";
 import ShopIcon from "@mui/icons-material/Shop";
-import Tooltip , { tooltipClasses }from '@mui/material/Tooltip';
-import CardContent from '@mui/material/CardContent';
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import CardContent from "@mui/material/CardContent";
 import OperatorPanelOrders from "../components/OperatorPanelOrders";
+import { Header } from "../components/Header";
 
 const drawerWidth = 240;
 
@@ -43,18 +44,22 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: '#f5f5f9',
-    color: 'rgba(0, 0, 0, 0.87)',
+    backgroundColor: "#f5f5f9",
+    color: "rgba(0, 0, 0, 0.87)",
     maxWidth: 220,
     fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
+    border: "1px solid #dadde9",
   },
 }));
 
+// const opDash = [
+//   { opPane: "Operator Dashboard", cuOrde: "cu", orDeta: "cupa", store: "cupas" },
+// ];
 
 export const OperatorPanel = ({ handleLogout, user }) => {
   const [numberOfPosition, setNumberOfPosition] = React.useState(0);
   const [data, setData] = React.useState(0);
+  const [header, setHeader] = React.useState([]);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -72,48 +77,54 @@ export const OperatorPanel = ({ handleLogout, user }) => {
             noWrap
             sx={{ flexGrow: 1 }}
           >
-            Operator Dashboard
+            hello
+            {/* {header.map((head) => <Header head={head}/>)} */}
           </Typography>
+          <HtmlTooltip title="Store">
           <IconButton color="inherit" component={RouteLink} to="/CreateOrder">
             <ShopIcon />
           </IconButton>
+          </HtmlTooltip>
 
-            <HtmlTooltip title={
-          <React.Fragment>
-              <div>
-                <Box>
+          <HtmlTooltip
+            title={
+              <React.Fragment>
+                <div>
+                  <Box>
                     <CardContent>
                       <Typography
                         sx={{ fontSize: 14 }}
                         color="text.secondary"
                         gutterBottom
                       >
-                       Order ID : {data.orderId}
+                        Order ID : {data.orderId}
                       </Typography>
                       <Typography variant="h5" component="div">
-                       Customer : {data.company}
+                        Customer : {data.company}
                       </Typography>
                       <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                       Number of Position : {numberOfPosition}
+                        Number of Position : {numberOfPosition}
                       </Typography>
                       <Typography variant="body2">
-                       Order Created Date : {data.createdDate}
+                        Order Created Date : {data.createdDate}
                       </Typography>
                     </CardContent>
-                    </Box>
-                    </div>
-          </React.Fragment>
-        }>
-                <IconButton
-                  color="inherit"
-                  component={RouteLink}
-                  to="/CurrentOrder"
-                >
-                  <Badge badgeContent={numberOfPosition} color="secondary">
-                    <ShoppingCartIcon />
-                  </Badge>
-                </IconButton>
-                </HtmlTooltip>
+                  </Box>
+                </div>
+              </React.Fragment>
+            }
+          >
+            <IconButton
+              color="inherit"
+              component={RouteLink}
+              to="/CurrentOrder"
+            >
+              <Badge badgeContent={numberOfPosition} color="secondary">
+                <ShoppingCartIcon />
+              </Badge>
+            </IconButton>
+          </HtmlTooltip>
+          <HtmlTooltip title="Operator's Order">
           <IconButton
             color="inherit"
             component={RouteLink}
@@ -121,9 +132,12 @@ export const OperatorPanel = ({ handleLogout, user }) => {
           >
             <HomeIcon />
           </IconButton>
+          </HtmlTooltip>
+          <HtmlTooltip title="Log Out">
           <IconButton color="inherit" onClick={handleLogout}>
             <LogoutIcon />
           </IconButton>
+          </HtmlTooltip>
         </Toolbar>
       </AppBar>
 
@@ -145,6 +159,7 @@ export const OperatorPanel = ({ handleLogout, user }) => {
             path="/CustomersOperatorPanel"
             element={
               <OperatorPanelOrders
+              setHeader={setHeader}
                 setNumberOfPosition={setNumberOfPosition}
                 user={user}
               />
@@ -152,18 +167,28 @@ export const OperatorPanel = ({ handleLogout, user }) => {
           />
           <Route
             path="/CreateOrder"
-            element={<CreateOrder setNumberOfPosition={setNumberOfPosition} user={user} transferData={data} setTransferData={setData}/>}
+            element={
+              <CreateOrder
+              setHeader={setHeader}
+                setNumberOfPosition={setNumberOfPosition}
+                user={user}
+                transferData={data}
+                setTransferData={setData}
+              />
+            }
           />
           <Route
             path="/CustomersOrder"
             element={
-              <CustomersOrder setNumberOfPosition={setNumberOfPosition} />
+              <CustomersOrder setHeader={setHeader} setNumberOfPosition={setNumberOfPosition} />
             }
-          />s
+          />
+          s
           <Route
             path="/CurrentOrder"
             element={
               <CurrentOrder
+              setHeader={setHeader}
                 setNumberOfPosition={setNumberOfPosition}
                 data={data}
                 setData={setData}

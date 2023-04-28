@@ -11,6 +11,7 @@ import axios from "axios";
 import Paper from '@mui/material/Paper';
 import { Container } from '@mui/system';
 import Dialog from '@mui/material/Dialog';
+import url from './url';
 
  function CreateCustomer() {
   const rolename = "CUSTOMER"
@@ -45,7 +46,7 @@ import Dialog from '@mui/material/Dialog';
     const savedToken = localStorage.getItem("token");
     console.log(roles)
     axios
-      .post("http://localhost:8080/rest/api/user/createUser", {
+      .post(url+"/rest/api/user/createUser", {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },
@@ -62,7 +63,7 @@ import Dialog from '@mui/material/Dialog';
   };
 
   const [profilePhotoUrl, setProfilePhotoUrl] = useState(
-    "http://localhost:8080/photos/test.png"
+    url+"/photos/test.png"
   );
 const handleFileSelect = async (event) => {
     try {
@@ -70,7 +71,7 @@ const handleFileSelect = async (event) => {
       formData.append("file", event.target.files[0]);
       const savedToken = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:8080/rest/api/user/photos",
+        url+"/rest/api/user/photos",
         formData,
         {
           headers: {

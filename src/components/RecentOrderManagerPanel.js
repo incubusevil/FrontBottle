@@ -8,6 +8,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
+import url from './url';
 
 const columns = [
   { id: 'orderId', label: 'Order Id', minWidth: 120 },
@@ -30,9 +31,6 @@ const columns = [
   },
 ];
 
-
-
-
 export default function RecentOrderManagerPanel() {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
@@ -50,7 +48,7 @@ export default function RecentOrderManagerPanel() {
 
   React.useEffect(()=>{
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/customer/order/getListOfOrdersForManager", {
+    axios.get(url+"/rest/api/customer/order/getListOfOrdersForManager", {
       headers: {
         Authorization: `Bearer ${savedToken}`,
       },

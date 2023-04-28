@@ -11,6 +11,7 @@ import axios from "axios";
 import Paper from "@mui/material/Paper";
 import { Container } from "@mui/system";
 import Dialog from "@mui/material/Dialog";
+import url from "./url";
 
 export function EditUser({ user: userData }) {
   const rolename = "CUSTOMER";
@@ -43,7 +44,7 @@ export function EditUser({ user: userData }) {
     const savedToken = localStorage.getItem("token");
     console.log(roles);
     axios
-      .post("http://localhost:8080/rest/api/user/UpdateUser", {
+      .post(url+"/rest/api/user/UpdateUser", {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },
@@ -78,7 +79,7 @@ export function EditUser({ user: userData }) {
       formData.append("file", event.target.files[0]);
       const savedToken = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:8080/rest/api/user/photos",
+        url+"/rest/api/user/photos",
         formData,
         {
           headers: {

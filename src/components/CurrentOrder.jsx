@@ -1,83 +1,186 @@
 import * as React from "react";
-import Paper from "@mui/material/Paper";
-import axios from "axios";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import { Container } from "@mui/material";
-import { CustomersOperatorRow } from "./CustomersOperatorRow";
+import Paper from "@mui/material/Paper";
+import { Box, Container } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import axios from "axios";
+import { CurrentOrderProductList } from "./CurrentOrderProductList";
+import url from "./url";
+
+const TAX_RATE = 0.07;
+
+function ccyFormat(num) {
+  return `${num.toFixed(2)}`;
+}
+
+function subtotal(products) {
+  let total = 0;
+  products.forEach(product => {
+    total += product.amountBottle * product.price;
+  });
+  return total;
+}
 
 const columns = [
-  { id: "email", label: "Email", minWidth: 120 },
-  { id: "firstName", label: "First Name", minWidth: 120 },
+  { id: "bottleId", label: "Bottle Id", minWidth: 120, align: "center" },
+  { id: "nameBottle", label: "Name Bottle", minWidth: 100 },
   {
-    id: "lastName",
-    label: "Last Name",
+    id: "producer",
+    label: "Producer",
     minWidth: 120,
   },
   {
-    id: "address",
-    label: "Address",
+    id: "amountBottle",
+    label: "Bottle Amount",
     minWidth: 100,
+    align: "right"
   },
   {
-    id: "phoneNumber",
-    label: "Phone Number",
-    minWidth: 120,
-    format: (value) => value.toLocaleString("en-US"),
-  },
-  {
-    id: "company",
-    label: "Company Name",
+    id: "price",
+    label: "Price Per Bottle",
     minWidth: 100,
+    align: "right"
   },
 ];
 
-export default function CurrentOrder() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [data, setData] = React.useState([]);
-  const [count, setCount] = React.useState([]);
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+export default function CurrentOrder({setNumberOfPosition, data, setData}) {
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+  const [bottles, setBottles] = React.useState([]);
+
+  const invoiceSubtotal = subtotal(bottles);
+  const invoiceTaxes = TAX_RATE * invoiceSubtotal;
+  const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 
   React.useEffect(() => {
     const savedToken = localStorage.getItem("token");
+    const orderId = localStorage.getItem("orderId");
     axios
-      .get("http://localhost:8080/rest/api/user/getCustomersList", {
+      .get(url+"/rest/api/customer/order/getOrderById", {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },
-        params: { size: rowsPerPage, page: page + 1 },
+        params: { orderId },
       })
       .then((response) => {
-        setData(response.data.content);
-        setCount(response.data);
+        console.log(response);
+        console.log(response.data);
+        console.log(response.data.bottleListDtoList);
+        setData(response.data);
+        setBottles(response.data.bottleListDtoList);
+        console.log(data);
+        console.log(bottles);
+        setNumberOfPosition(response.data.bottleListDtoList.length);
       });
-  }, [page, rowsPerPage]);
-
-
-
-  //todo add active orders near exit button
+  }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 700 }}>
-          <Table stickyHeader aria-label="sticky table">
+    <Stack
+      direction="row"
+      spacing={2}
+      sx={{
+        mt: 4,
+      }}
+    >
+      <Box
+        m="left"
+        sx={{
+          width: 300,
+          ml: 4,
+        }}
+      >
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 100 }} aria-label="simple table">
             <TableHead>
               <TableRow>
+                <TableCell>Customer Details</TableCell>
+                <TableCell align="right">
+                  <Avatar
+                    src={data.profilePhotoPath}
+                    style={{
+                      margin: "10px",
+                      width: "60px",
+                      height: "60px",
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  First Name
+                </TableCell>
+                <TableCell align="right">{data.firstName}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Last Name
+                </TableCell>
+                <TableCell align="right">{data.lastName}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Phone Number
+                </TableCell>
+                <TableCell align="right">{data.phoneNumber}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Company
+                </TableCell>
+                <TableCell align="right">{data.company}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Order Details
+                </TableCell>
+                <TableCell align="right"></TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Order Id
+                </TableCell>
+                <TableCell align="right">{data.orderId}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Order Created Date
+                </TableCell>
+                <TableCell align="right">{data.createdDate}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Order Status
+                </TableCell>
+                <TableCell align="right"></TableCell>
+              </TableRow>  
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+      <Container>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="spanning table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center" colSpan={5}>
+                  Product List
+                </TableCell>
+                <TableCell align="left" colSpan={2}>
+                  Price
+                  </TableCell>
+              </TableRow>
+              <TableRow>
+              <TableCell>
+                  Bottle Photo
+                </TableCell>
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
@@ -87,25 +190,36 @@ export default function CurrentOrder() {
                     {column.label}
                   </TableCell>
                 ))}
-                <TableCell>Create Order</TableCell>
-                <TableCell>Customer Orders</TableCell>
+                <TableCell>
+                       Postition Total Price
+                    </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-            {data.map((user) => <CustomersOperatorRow key={user.email} user={user}/>)}
+            {bottles.map((bottle) => <CurrentOrderProductList key={bottle.bottleId} bottle={bottle}/>)}
+              <TableRow>
+                <TableCell rowSpan={3} colSpan={4}/>
+                <TableCell colSpan={2}>Subtotal</TableCell>
+                <TableCell align="right">
+                  {ccyFormat(invoiceSubtotal)}
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Tax</TableCell>
+                <TableCell align="right">{`${(TAX_RATE * 100).toFixed(
+                  0
+                )} %`}</TableCell>
+                <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
+              </TableRow>
+              <TableRow>
+
+                <TableCell colSpan={2}>Total</TableCell>
+                <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={count.totalElements}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-    </Container>
+      </Container>
+    </Stack>
   );
 }

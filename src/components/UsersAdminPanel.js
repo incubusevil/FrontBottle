@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { UserRow } from './UserRow';
+import url from './url';
 
 const columns = [
   { id: 'profilePhotoPath', label: 'Profile Photo', minWidth: 120 },
@@ -59,7 +60,7 @@ export default function UsersAdminPanel() {
 
   React.useEffect(()=>{
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/user/getUsersList", {
+    axios.get(url+"/rest/api/user/getUsersList", {
       headers: {
                Authorization: `Bearer ${savedToken}`,
              },

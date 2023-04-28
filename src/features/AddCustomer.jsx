@@ -11,12 +11,12 @@ import axios from "axios";
 import Paper from '@mui/material/Paper';
 import { Container } from '@mui/system';
 import Dialog from '@mui/material/Dialog';
-
+import url from '../components/url';
 
  function CreateCustomer() {
-  const rolename = "CUSTOMER"
+  const roleName = "CUSTOMER"
   const roles = [
-      {rolename}
+      {roleName}
   ];
 
   const [open, setOpen] = React.useState(false);
@@ -30,10 +30,8 @@ import Dialog from '@mui/material/Dialog';
   };
 
   const handleSubmit = async (event) => {
-    console.log(event);
-
+    console.log(event)
     event.preventDefault();
-
     const firstName = event.target?.[0].value;
     const lastName = event.target?.[2].value;
     const email = event.target?.[4].value;
@@ -41,14 +39,10 @@ import Dialog from '@mui/material/Dialog';
     const phoneNumber = event.target?.[8].value;
     const company = event.target?.[10].value;
     const password = event.target?.[12].value;
-
-
     const savedToken = localStorage.getItem("token");
-
     console.log(roles)
-
     axios
-      .post("http://localhost:8080/rest/api/user/createUser", {
+      .post(url+"/rest/api/user/createUser", {
         firstName,
         lastName,
         email,
@@ -56,8 +50,7 @@ import Dialog from '@mui/material/Dialog';
         phoneNumber,
         company,
         password,
-        roles,
-        headres
+        roles
       },
       {
         headers: {

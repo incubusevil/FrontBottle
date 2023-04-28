@@ -1,11 +1,10 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Title from './Title';
+import url from './url';
 
 const columns = [
   { id: 'email', label: 'Email', minWidth: 120 },
@@ -42,7 +41,7 @@ export default function RecentOrder() {
 
   React.useEffect(()=>{
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/user/getUsersList", {
+    axios.get(url+"/rest/api/user/getUsersList", {
       headers: {
         Authorization: `Bearer ${savedToken}`,
       },

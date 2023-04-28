@@ -18,6 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
+import url from "../components/url";
 
 console.log('test')
 
@@ -92,7 +93,7 @@ function CreateUser() {
     const savedToken = localStorage.getItem("token");
     axios
       .post(
-        "http://localhost:8080/rest/api/user/createUser",
+        url+"/rest/api/user/createUser",
         {
           firstName,
           lastName,

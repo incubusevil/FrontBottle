@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { Copyright } from '../components';
 import Container from "@mui/material/Container";
-import CustomersOperatorPanel from '../components/CustomersOperatorPanel';
+import CustomersOperatorPanel from '../components/OperatorPanelOrders';
 
 export default function OperatorDashboard() {
     return( 

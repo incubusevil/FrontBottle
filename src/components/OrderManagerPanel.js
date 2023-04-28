@@ -9,6 +9,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import { OrderManagerRow } from './OrderManagerRow';
+import url from './url';
 
 const columns = [
   { id: 'orderId', label: 'Order Id', minWidth: 120 },
@@ -53,7 +54,7 @@ export default function OrderManagerPanel() {
 
   React.useEffect(()=>{
     const savedToken = localStorage.getItem('token');
-    axios.get("http://localhost:8080/rest/api/customer/order/getListOfOrdersForManager", {
+    axios.get(url+"/rest/api/customer/order/getListOfOrdersForManager", {
       headers: {
         Authorization: `Bearer ${savedToken}`,
       },

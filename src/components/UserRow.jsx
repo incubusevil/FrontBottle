@@ -6,6 +6,7 @@ import Switch from '@mui/material/Switch';
 import Avatar from '@mui/material/Avatar';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {EditUser} from "./EditUser";
+import url from "./url";
 
 export const UserRow = ({ user }) => {
   const [accountStatus, setAccountStatus] = React.useState(user.accountStatus);
@@ -15,7 +16,7 @@ export const UserRow = ({ user }) => {
     const email = user.email;
     const savedToken = localStorage.getItem('token');
     console.log(email, accountStatus);
-    axios.get("http://localhost:8080/rest/api/user/setNewAccountStatus", {
+    axios.get(url+"/rest/api/user/setNewAccountStatus", {
         headers: {
             Authorization: `Bearer ${savedToken}`,
           },
