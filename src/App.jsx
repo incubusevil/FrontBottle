@@ -1,68 +1,57 @@
-import { useEffect, useState } from "react";
-import {createTheme, ThemeProvider,} from "@mui/material";
-import axios from "axios";
-import jwt_decode from "jwt-decode";
 import { LoginPage } from "./features/LoginPage";
-import { AdminPanel } from "./features/AdminPanel";
-import { ManagerPanel } from "./features/ManagerPanel";
-import { OperatorPanel } from "./features/OperatorPanel";
-import { BrowserRouter as Router } from "react-router-dom";
-import CssBaseline from '@mui/material/CssBaseline';
+import { AdminPanel } from "./features/admin/AdminPanel";
+import { LoadingPage } from "./features/LoadingPage";
+import { ManagerPanel } from "./features/manager/ManagerPanel";
+import { OperatorPanel } from "./features/operator/OperatorPanel";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+import CreateOrder from "./components/operator/CreateOrder";
+import CustomersOrder from "./components/operator/CustomersOrder";
+import CurrentOrder from "./components/operator/CurrentOrder";
+import OperatorPanelOrders from "./components/operator/OperatorPanelOrders";
+import { StackContext } from "./StackContext";
+import OperatorDashboard from "./components/operator/OperatorDashboard";
+import { CurrentOrderNotFount } from "./components/operator/CurentOrderNotFound";
 
-const theme = createTheme();
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
-
-//move domain name in to global variable in configuration file
- 
 export default function App() {
-  const [user, setUser] = useState(null); 
-  const handleLogout= () => {
-    localStorage.removeItem("token");
-    setUser(null)
-  }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const email = event.target?.[0].value;
-    const password = event.target?.[2].value;
-    axios.post("http://localhost:8080/rest/api/auth/login", {email, password})
-          .then(response => {setUser(jwt_decode(response.data)) 
-            localStorage.setItem('token', response.data)
-          console.log(response.data)})
-  };
-
-  useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    console.log("token check");
-    if(savedToken){
-        axios.get('http://localhost:8080/rest/api/auth/tokenCheck', {
-          headers: {
-            Authorization: `Bearer ${savedToken}`,
-          },
-        }).then(setUser(jwt_decode(savedToken)));
-      }
-  }, []);
-   
-  const isUserAdmin = !!user?.role?.find(({authority})=> authority === 'ADMIN');
-
-  const isUserOperator = !!user?.role?.find(({authority})=> authority === 'OPERATOR');
-
-  const isUserManager = !!user?.role?.find(({authority})=> authority === 'MANAGER');
-
   return (
-    <Router>
-      <ThemeProvider theme={theme}>
-        {!user && <LoginPage handleSubmit={handleSubmit}/>}
-        {isUserAdmin && <AdminPanel handleLogout={handleLogout}/>}
-        {isUserOperator && <OperatorPanel handleLogout={handleLogout} user={user}/>}
-        {isUserManager && <ManagerPanel handleLogout={handleLogout}/>}
-      </ThemeProvider>
-    </Router>
-  )
-
+    <>
+      <BrowserRouter>
+        <StackContext>
+          <Routes>
+            <Route exact path="/" element={<LoadingPage />} />
+            <Route exact path="/LoginPage" element={<LoginPage />} />
+            <Route exact path="/AdminPanel" element={<AdminPanel />} />
+            <Route exact path="/OperatorPanel" element={<OperatorPanel />}>
+              <Route
+                path="/OperatorPanel/OperatorDashboard"
+                element={<OperatorDashboard />}
+              />
+              <Route
+                path="/OperatorPanel/CustomersOperatorPanel"
+                element={<OperatorPanelOrders />}
+              />
+              <Route
+                exact
+                path="/OperatorPanel/CreateOrder"
+                element={<CreateOrder />}
+              />
+              <Route
+                path="/OperatorPanel/CustomersOrder"
+                element={<CustomersOrder />}
+              />
+              <Route
+                path="/OperatorPanel/CurrentOrder"
+                element={<CurrentOrder />}
+              />
+              <Route
+                path="/OperatorPanel/CurrentOrderNotFound"
+                element={<CurrentOrderNotFount />}
+              />
+            </Route>
+            <Route exact path="/ManagerPanel" element={<ManagerPanel />} />
+          </Routes>
+        </StackContext>
+      </BrowserRouter>
+    </>
+  );
 }
