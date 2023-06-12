@@ -19,7 +19,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import url from "../url";
 
-export const CurrentOrderProductList = ({ bottle, orderStatus }) => {
+export const StoremanCurrentOrderProductList = ({ bottle, orderStatus }) => {
   const [open, setOpen] = React.useState(false);
   const [amountBottle, setAmountBottle] = React.useState(bottle.amountBottle);
   const [bottleId, setBottleId] = React.useState();
@@ -55,7 +55,7 @@ export const CurrentOrderProductList = ({ bottle, orderStatus }) => {
     console.log(bottleId);
     axios
       .post(
-        url + "/rest/api/customer/order/addItemToOrder",
+        url + "/rest/api/customer/order/setBottleStatus",
         {
           orderId: orderId,
           bottleId: bottleId,

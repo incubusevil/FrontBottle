@@ -16,7 +16,7 @@ export const LoadingPage = () => {
 
   useEffect( () => {
     const savedToken = localStorage.getItem("token");
-    console.log("token check");
+    console.log(savedToken);
     if (savedToken) {
       axios
         .get(url + "/rest/api/auth/tokenCheck", {
@@ -36,11 +36,20 @@ export const LoadingPage = () => {
           const isUserManager = !!user?.role?.find(
             ({ authority }) => authority === "MANAGER"
           );
+
+          const isUserStoreman = !!redirect?.role?.find(
+          ({ authority }) => authority === "STOREMAN"
+        );
           
           isUserAdmin && navigate("/AdminPanel");
           isUserOperator && navigate("/OperatorPanel");
           isUserManager && navigate("/ManagerPanel");
-        });
+          isUserStoreman && navigate("/StoremanPanel");
+        }).catch(
+          () => {
+            navigate("/LoginPage")
+          }
+        );
     }
     else {
     const isUser = !user;

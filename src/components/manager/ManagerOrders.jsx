@@ -5,7 +5,7 @@ import { Copyright } from '../Copyright';
 import Container from "@mui/material/Container";
 import OrderManagerPanel from './OrderManagerPanel';
 
-export default function Orders() {
+export default function ManagerOrders() {
     return( 
         <Container component="main">
         <Grid container spacing={3}>

@@ -5,7 +5,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import { Box, Container } from "@mui/material";
 import Stack from "@mui/material/Stack";
@@ -23,7 +22,7 @@ function ccyFormat(num) {
 
 function subtotal(products) {
   let total = 0;
-  products.forEach((product) => {
+  products.forEach(product => {
     total += product.amountBottle * product.price;
   });
   return total;
@@ -41,29 +40,31 @@ const columns = [
     id: "amountBottle",
     label: "Bottle Amount",
     minWidth: 100,
-    align: "right",
+    align: "right"
   },
   {
     id: "price",
     label: "Price Per Bottle",
     minWidth: 100,
-    align: "right",
+    align: "right"
   },
   {
     id: "totalPrice",
     label: "Total Price",
     minWidth: 100,
-    align: "right",
+    align: "right"
   },
 ];
 
-export default function CurrentOrder() {
+
+export default function ManagerCurrentOrder() {
+
   const [bottles, setBottles] = React.useState([]);
   const [data, setData] = React.useState([]);
 
-  const { numberOfPosition, setNumberOfPosition } =
-    React.useContext(NumberOfPosition);
-  const { orderId, setOrderId } = React.useContext(OrderId);
+
+  const {numberOfPosition, setNumberOfPosition} = React.useContext(NumberOfPosition)
+  const {orderId, setOrderId} = React.useContext(OrderId)
   const { orderDetails, setOrderDetails } = React.useContext(OrderDetails);
 
   const invoiceSubtotal = subtotal(bottles);
@@ -73,7 +74,7 @@ export default function CurrentOrder() {
   React.useEffect(() => {
     const savedToken = localStorage.getItem("token");
     axios
-      .get(url + "/rest/api/customer/order/getOrderById", {
+      .get(url+"/rest/api/customer/order/getOrderById", {
         headers: {
           Authorization: `Bearer ${savedToken}`,
         },
@@ -91,28 +92,6 @@ export default function CurrentOrder() {
         setNumberOfPosition(response.data.bottleListDtoList.length);
       });
   }, []);
-
-  const hanldeSubmitOrder = async () => {
-    const newStatus = "WaitingForCustomerResponse";
-    const savedToken = localStorage.getItem("token");
-    axios
-      .post(url + "/rest/api/customer/order/submitOrderStatus",{
-          orderId,
-          status: newStatus,
-          email: data.email,
-          firstName: data.firstName,
-          lastName: data.lastName
-      }, 
-      {
-        headers: {
-          Authorization: `Bearer ${savedToken}`,
-        },
-      })
-      .then((response) => {
-        console.log(response);
-      });
-  };
-  
 
   return (
     <Stack
@@ -133,9 +112,7 @@ export default function CurrentOrder() {
           <Table sx={{ minWidth: 100 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell sx={{ typography: "body1" }}>
-                  Customer Details
-                </TableCell>
+                <TableCell sx={{ typography: 'body1' }}>Customer Details</TableCell>
                 <TableCell align="right">
                   <Avatar
                     src={data.profilePhotoPath}
@@ -174,11 +151,7 @@ export default function CurrentOrder() {
                 <TableCell align="right">{data.company}</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell
-                  component="th"
-                  scope="row"
-                  sx={{ typography: "body1" }}
-                >
+                <TableCell component="th" scope="row" sx={{ typography: 'body1' }}>
                   Order Details
                 </TableCell>
                 <TableCell align="right"></TableCell>
@@ -200,22 +173,7 @@ export default function CurrentOrder() {
                   Order Status
                 </TableCell>
                 <TableCell align="right">{data.status}</TableCell>
-              </TableRow>
-              <TableRow>
-              <TableCell colSpan={2} >
-              <Button
-                    onClick={() => {
-                      hanldeSubmitOrder();
-                    }}
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 1, mb: 1 }}
-                  >
-                    Submit Order
-                  </Button>
-                  </TableCell>
-              </TableRow>
+              </TableRow>  
             </TableBody>
           </Table>
         </TableContainer>
@@ -230,10 +188,12 @@ export default function CurrentOrder() {
                 </TableCell>
                 <TableCell align="left" colSpan={2}>
                   Price
-                </TableCell>
+                  </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>Bottle Photo</TableCell>
+              <TableCell>
+                  Bottle Photo
+                </TableCell>
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
@@ -246,15 +206,9 @@ export default function CurrentOrder() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {bottles.map((bottle) => (
-                <CurrentOrderProductList
-                  key={bottle.bottleId}
-                  bottle={bottle}
-                  orderStatus={data.status}
-                />
-              ))}
+            {bottles.map((bottle) => <CurrentOrderProductList key={bottle.bottleId} bottle={bottle} orderStatus={data.status}/>)}
               <TableRow>
-                <TableCell rowSpan={3} colSpan={4} />
+                <TableCell rowSpan={3} colSpan={4}/>
                 <TableCell colSpan={2}>Subtotal</TableCell>
                 <TableCell align="right">
                   {ccyFormat(invoiceSubtotal)}
@@ -268,6 +222,7 @@ export default function CurrentOrder() {
                 <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
               </TableRow>
               <TableRow>
+
                 <TableCell colSpan={2}>Total</TableCell>
                 <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
               </TableRow>

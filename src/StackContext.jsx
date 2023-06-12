@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 
 export const UserContext = createContext({ user: {} });
@@ -9,18 +9,22 @@ export const Header = createContext({ header: {} });
 export const ProfileId = createContext();
 
 export const StackContext = (props) => {
-  const token = jwt_decode(localStorage.getItem("token"));
-  const [user, setUser] = useState(token);
+  const token = localStorage.getItem("token");
+  const [user, setUser] = useState(() => {
+    if(token){
+      return jwt_decode(token)
+    }
+  });
   const [numberOfPosition, setNumberOfPosition] = useState(0);
   const [orderId, setOrderId] = useState();
   const [orderDetails, setOrderDetails] = useState({});
   const [header, setHeader] = useState("Operator Dashboard");
   const [profileId, setProfileId] = useState();
+
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <NumberOfPosition.Provider
-        value={{ numberOfPosition, setNumberOfPosition }}
-      >
+        value={{ numberOfPosition, setNumberOfPosition }}>
         <OrderId.Provider value={{ orderId, setOrderId }}>
           <OrderDetails.Provider value={{ orderDetails, setOrderDetails }}>
             <Header.Provider value={{ header, setHeader }}>

@@ -7,7 +7,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Title from '../Title';
+import Title from './dashboardElements/Title';
 import TablePagination from '@mui/material/TablePagination';
 import { DashboardOrderRow } from './DashboardOrderRow';
 import { UserContext } from '../../StackContext';

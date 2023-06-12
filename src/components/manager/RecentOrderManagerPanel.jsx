@@ -8,11 +8,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TablePagination from '@mui/material/TablePagination';
+import Title from './dashboardElements/Title';
 import url from '../url';
+import { OrderRow } from './OrderRow';
 
 const columns = [
   { id: 'orderId', label: 'Order Id', minWidth: 120 },
-  { id: 'email', label: 'Email', minWidth: 120 },
+  { id: 'company', label: 'Customer', minWidth: 120 },
   {
     id: 'deliveryAddress',
     label: 'Delivery Address',
@@ -26,6 +28,12 @@ const columns = [
   {
     id: 'status',
     label: 'Order Status',
+    minWidth: 120,
+    format: (value) => value.toLocaleString('en-US'),
+  },
+  {
+    id: 'orderDetails',
+    label: 'Order Details',
     minWidth: 120,
     format: (value) => value.toLocaleString('en-US'),
   },
@@ -54,11 +62,14 @@ export default function RecentOrderManagerPanel() {
       },
       params: {size: rowsPerPage, page: page + 1}
     }).then(response => {setData(response.data.content)
-                        setCount(response.data)}
+                        setCount(response.data)
+                        console.log(response.data)}
     )
   },[page,rowsPerPage])
 
   return (
+    <>
+    <Title>Recent Orders</Title>
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <TableContainer sx={{ maxHeight: 440 }}>
         <Table stickyHeader aria-label="sticky table">
@@ -76,23 +87,7 @@ export default function RecentOrderManagerPanel() {
             </TableRow>
           </TableHead>
          <TableBody> 
-            {data
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === 'number'
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+         {data.map((order) => <OrderRow key={order.orderId} order={order}/>)}
           </TableBody>
         </Table>
       </TableContainer>
@@ -106,5 +101,6 @@ export default function RecentOrderManagerPanel() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Paper>
+    </>
   );
 }

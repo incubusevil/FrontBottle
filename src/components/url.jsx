@@ -1,4 +1,4 @@
 import * as React from "react";
 
-const url = "http://localhost:8080";
+const url = "http://odaistore.md";
 export default  url;

@@ -14,7 +14,7 @@ import TextField from "@mui/material/TextField";
 import { OrderRow } from "./OrderRow";
 import url from "../url";
 import { UserContext } from "../../StackContext";
-import OperatorPanelOrderFilter from "./OperatorPanelOrderFilter";
+import StoremanDashboardFilter from "./StoremanDashboardFilter";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import dayjs from "dayjs";
@@ -143,7 +143,7 @@ export default function OperatorPanelOrders() {
             ml: 4,
           }}
         >
-          <OperatorPanelOrderFilter
+          <StoremanDashboardFilter
             handleChangeStatus={handleChangeStatus}
             handleChangeFromDate={handleChangeFromDate}
             handleChangeToDate={handleChangeToDate}
@@ -186,9 +186,6 @@ export default function OperatorPanelOrders() {
               ))}
               <TableCell>
                     View Details
-                  </TableCell>
-                  <TableCell>
-                    View Customers Orders
                   </TableCell>
             </TableRow>
           </TableHead>

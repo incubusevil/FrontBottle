@@ -3,8 +3,8 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { Copyright } from '../Copyright'; 
 import Container from "@mui/material/Container";
-import Chart from "../Chart"
-import Deposits from "../Deposits"
+import Chart from "./dashboardElements/Chart"
+import Deposits from "./dashboardElements/Deposits"
 import RecentOrderManagerPanel from "./RecentOrderManagerPanel";
 
 export default function ManagerDashboard() {

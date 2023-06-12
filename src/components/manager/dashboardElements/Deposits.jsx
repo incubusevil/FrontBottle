@@ -5,7 +5,6 @@ import axios from 'axios';
 import dayjs from "dayjs";
 import Title from './Title';
 import url from '../../url';
-import { UserContext } from '../../../StackContext';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -14,20 +13,16 @@ function preventDefault(event) {
 export default function Deposits() {
   const [data, setData] = React.useState();
   const [date, setDate] = React.useState(dayjs(new Date(Date.now() - 86400000 )).format('DD/MM/YYYY'));
-  const {user, setUser} = React.useContext(UserContext)
   React.useEffect(() => {
-    const savedToken = localStorage.getItem("token");
     console.log(date)
+    const savedToken = localStorage.getItem("token");
     axios
       .get(
-        url + "/rest/api/customer/order/getSalesForYesterday",
+        url + "/rest/api/customer/order/getAllSalesForYesterday",
         {
           headers: {
             Authorization: `Bearer ${savedToken}`,
           },
-          params: {
-            operatorEmail: user.sub
-          }
         }
       )
       .then((response) => {

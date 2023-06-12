@@ -5,13 +5,13 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import { Box, Container } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
-import { CurrentOrderProductList } from "./CurrentOrderProductList";
+import Button from "@mui/material/Button";
+import { StoremanCurrentOrderProductList } from "./StoremanCurrentOrderProductList";
 import url from "../url";
 import { NumberOfPosition, OrderDetails, OrderId } from "../../StackContext";
 
@@ -57,7 +57,7 @@ const columns = [
   },
 ];
 
-export default function CurrentOrder() {
+export default function StoremanCurrentOrder() {
   const [bottles, setBottles] = React.useState([]);
   const [data, setData] = React.useState([]);
 
@@ -93,26 +93,40 @@ export default function CurrentOrder() {
   }, []);
 
   const hanldeSubmitOrder = async () => {
-    const newStatus = "WaitingForCustomerResponse";
+    const newStatus = "ReadyForPickUp";
     const savedToken = localStorage.getItem("token");
     axios
-      .post(url + "/rest/api/customer/order/submitOrderStatus",{
-          orderId,
-          status: newStatus,
-          email: data.email,
-          firstName: data.firstName,
-          lastName: data.lastName
-      }, 
-      {
+      .get(url + "/rest/api/customer/order/submitOrderStatus", {
         headers: {
           Authorization: `Bearer ${savedToken}`,
+        },
+        params: {
+          orderId,
+          status: newStatus,
         },
       })
       .then((response) => {
         console.log(response);
       });
   };
-  
+
+  const hanldeRejectOrder = async () => {
+    const newStatus = "OrderRejectedByWarehouse";
+    const savedToken = localStorage.getItem("token");
+    axios
+      .get(url + "/rest/api/customer/order/submitOrderStatus", {
+        headers: {
+          Authorization: `Bearer ${savedToken}`,
+        },
+        params: {
+          orderId,
+          status: newStatus,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  };
 
   return (
     <Stack
@@ -202,8 +216,8 @@ export default function CurrentOrder() {
                 <TableCell align="right">{data.status}</TableCell>
               </TableRow>
               <TableRow>
-              <TableCell colSpan={2} >
-              <Button
+                <TableCell colSpan={2}>
+                  <Button
                     onClick={() => {
                       hanldeSubmitOrder();
                     }}
@@ -214,7 +228,22 @@ export default function CurrentOrder() {
                   >
                     Submit Order
                   </Button>
-                  </TableCell>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell colSpan={2}>
+                  <Button
+                    onClick={() => {
+                      hanldeRejectOrder();
+                    }}
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 1, mb: 1 }}
+                  >
+                    Reject Order
+                  </Button>
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>
@@ -247,7 +276,7 @@ export default function CurrentOrder() {
             </TableHead>
             <TableBody>
               {bottles.map((bottle) => (
-                <CurrentOrderProductList
+                <StoremanCurrentOrderProductList
                   key={bottle.bottleId}
                   bottle={bottle}
                   orderStatus={data.status}

@@ -111,6 +111,7 @@ export default function CreateOrder() {
     const customer = companies.find((customer) => {
       return customer.company === selectCustomer;
     });
+    console.log(companies)
     const savedToken = localStorage.getItem("token");
     const createStatus = "Created";
     console.log(user);

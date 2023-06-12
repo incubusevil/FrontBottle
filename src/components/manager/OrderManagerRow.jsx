@@ -25,18 +25,20 @@ export const OrderManagerRow = ({ order }) => {
   return (
     <TableRow hover role="checkbox" tabIndex={-1}>
       <TableCell>{order.orderId}</TableCell>
-      <TableCell>{order.email}</TableCell>
-      <TableCell>{order.deliveryAddress}</TableCell>
+      <TableCell>{order.company}</TableCell>
+      <TableCell>{order.address}</TableCell>
       <TableCell>{order.createdDate}</TableCell>
       <TableCell>
         <Select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         >
-          <MenuItem value="Approved by customer">Approved by customer</MenuItem>
-          <MenuItem value="In Progress">In Progress</MenuItem>
+          <MenuItem value="ApprovedByCustomer">Approved by customer</MenuItem>
+          <MenuItem value="Created">Created</MenuItem>
           <MenuItem value="Delivered">Delivered</MenuItem>
-        </Select>
+          <MenuItem value="ProcessedByTheWarehouse">Processed By The Warehouse</MenuItem>
+          <MenuItem value="OnTheWay">On The Way</MenuItem>
+        </Select> 
       </TableCell>
       <TableCell>
       <Button

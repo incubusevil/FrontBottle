@@ -1,4 +1,4 @@
-import { Copyright } from "../components/Copyright"; 
+import { Copyright } from "../components/Copyright";
 import { LoginForm } from "../components/LoginForm";
 import {
   Avatar,
@@ -8,45 +8,49 @@ import {
   Grid,
   Paper,
 } from "@mui/material";
-import axios from 'axios';
+import axios from "axios";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import jwt_decode from "jwt-decode";
 import url from "../components/url";
-import { useNavigate } from "react-router-dom"
-import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import { UserContext } from "../StackContext";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const {user, setUser} = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const email = event.target?.[0].value;
     const password = event.target?.[2].value;
     axios
-      .post(url+"/rest/api/auth/login", { email, password })
+      .post(url + "/rest/api/auth/login", { email, password })
       .then((response) => {
-        localStorage.setItem('user', jwt_decode(response.data));
-        localStorage.setItem("token", response.data);
+        localStorage.setItem("token", response.data); 
+        const redirect = jwt_decode(response.data);
         console.log(response.data);
-        setUser(jwt_decode(response.data))
-        const isUserAdmin = !!user?.role?.find(
+        setUser(jwt_decode(response.data));
+        const isUserAdmin = !!redirect?.role?.find(
           ({ authority }) => authority === "ADMIN"
         );
-    
-        const isUserOperator = !!user?.role?.find(
+
+        const isUserOperator = !!redirect?.role?.find(
           ({ authority }) => authority === "OPERATOR"
         );
-    
-        const isUserManager = !!user?.role?.find(
+
+        const isUserManager = !!redirect?.role?.find(
           ({ authority }) => authority === "MANAGER"
         );
-        
+
+        const isUserStoreman = !!redirect?.role?.find(
+          ({ authority }) => authority === "STOREMAN"
+        );
+
         isUserAdmin && navigate("/AdminPanel");
         isUserOperator && navigate("/OperatorPanel");
         isUserManager && navigate("/ManagerPanel");
-      });
-
+        isUserStoreman && navigate("/StoremanPanel");
+      })
   };
 
   return (
@@ -58,8 +62,7 @@ export const LoginPage = () => {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: "url(https://source.unsplash.com/random)",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: url + "/photos/whiteLogo.jpg)",
           backgroundColor: (t) =>
             t.palette.mode === "light"
               ? t.palette.grey[50]
@@ -84,7 +87,7 @@ export const LoginPage = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <LoginForm handleSubmit={handleSubmit}></LoginForm>
+          <LoginForm handleSubmit={(handleSubmit)}></LoginForm>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Grid>

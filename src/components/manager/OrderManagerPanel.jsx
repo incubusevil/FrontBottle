@@ -13,7 +13,7 @@ import url from '../url';
 
 const columns = [
   { id: 'orderId', label: 'Order Id', minWidth: 120 },
-  { id: 'email', label: 'Email', minWidth: 120 },
+  { id: 'company', label: 'Customer', minWidth: 120 },
   {
     id: 'deliveryAddress',
     label: 'Delivery Address',
@@ -31,8 +31,8 @@ const columns = [
     format: (value) => value.toLocaleString('en-US'),
   },
   {
-    id: 'editCustomer',
-    label: 'Edit Customer',
+    id: 'applyChanges',
+    label: 'Apply Changes',
     minWidth: 100, 
   },
 ];
