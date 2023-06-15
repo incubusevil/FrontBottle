@@ -3,7 +3,7 @@ import { AdminPanel } from "./features/admin/AdminPanel";
 import { LoadingPage } from "./features/LoadingPage";
 import { ManagerPanel } from "./features/manager/ManagerPanel";
 import { OperatorPanel } from "./features/operator/OperatorPanel";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, HashRouter } from "react-router-dom";
 import CreateOrder from "./components/operator/CreateOrder";
 import CustomersOrder from "./components/operator/CustomersOrder";
 import CurrentOrder from "./components/operator/CurrentOrder";
@@ -23,7 +23,7 @@ import { StoremanCurrentOrderNotFount } from "./components/storeman/StoremanCure
 export default function App() {
   return (
     <>
-      <BrowserRouter>
+      <HashRouter>
         <StackContext>
           <Routes>
             <Route exact path="/" element={<LoadingPage />} />
@@ -95,7 +95,7 @@ export default function App() {
             </Route>
           </Routes>
         </StackContext>
-      </BrowserRouter>
+      </HashRouter>
     </>
   );
 }
